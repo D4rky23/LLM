@@ -4,8 +4,9 @@ import sys
 from pathlib import Path
 import streamlit as st
 import json
-from typing import List, Optional
+from typing import List, Optional, Tuple
 import time
+import re
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
@@ -210,7 +211,14 @@ def display_sample_queries():
 
     for i, query in enumerate(sample_queries):
         if st.button(query, key=f"sample_{i}"):
-            return query
+            # Store the selected query in session state for one-time use
+            st.session_state.selected_query = query
+
+    # Return and clear the selected query
+    if hasattr(st.session_state, "selected_query"):
+        query = st.session_state.selected_query
+        del st.session_state.selected_query
+        return query
 
     return None
 
@@ -243,6 +251,103 @@ def display_chat_history():
                 """,
                     unsafe_allow_html=True,
                 )
+
+
+def extract_book_info_from_response(response: str) -> Tuple[str, List[str]]:
+    """
+    Extract book title and themes from chatbot response.
+
+    Args:
+        response: Chatbot response text
+
+    Returns:
+        Tuple of (book_title, themes_list)
+    """
+    # Default values
+    default_title = "Recommended Book"
+    default_themes = ["literature", "fiction"]
+
+    # Try to extract book title using common patterns
+    title_patterns = [
+        r'"([^"]+)"',  # Text in quotes
+        r'„([^„"]+)"',  # Romanian quotes
+        r"\*([^*]+)\*",  # Text in asterisks
+        r'titled\s+"([^"]+)"',  # "titled X"
+        r'called\s+"([^"]+)"',  # "called X"
+        r'book\s+"([^"]+)"',  # "book X"
+        r'cartea\s+"([^"]+)"',  # "cartea X" in Romanian
+        r'intitulată\s+"([^"]+)"',  # "intitulată X" in Romanian
+    ]
+
+    extracted_title = None
+    for pattern in title_patterns:
+        matches = re.findall(pattern, response, re.IGNORECASE)
+        if matches:
+            extracted_title = matches[0].strip()
+            # Filter out common non-title words
+            if len(extracted_title) > 3 and not extracted_title.lower() in [
+                "the",
+                "and",
+                "or",
+                "but",
+            ]:
+                break
+
+    # Try to extract themes from the response
+    theme_keywords = {
+        "adventure": [
+            "adventure",
+            "aventură",
+            "quest",
+            "journey",
+            "călătorie",
+        ],
+        "friendship": ["friendship", "prietenie", "friends", "prieteni"],
+        "love": ["love", "romance", "dragoste", "romantic"],
+        "war": ["war", "război", "battle", "conflict", "military"],
+        "fantasy": ["fantasy", "magic", "fantastic", "magie", "magical"],
+        "mystery": ["mystery", "detective", "crime", "mister", "mysterious"],
+        "science": ["science", "scientific", "știință", "technology"],
+        "history": ["history", "historical", "istorie", "istoric"],
+        "freedom": ["freedom", "liberty", "libertate", "independence"],
+        "dystopia": ["dystopia", "totalitarian", "control", "surveillance"],
+        "coming-of-age": ["growing up", "adolescence", "youth", "teenager"],
+        "family": ["family", "familie", "parents", "părinți"],
+        "society": ["society", "social", "societate", "community"],
+        "psychological": ["psychological", "mental", "psihologic", "mind"],
+        "philosophical": [
+            "philosophy",
+            "philosophical",
+            "filozofie",
+            "meaning",
+        ],
+    }
+
+    extracted_themes = []
+    response_lower = response.lower()
+
+    for theme, keywords in theme_keywords.items():
+        for keyword in keywords:
+            if keyword in response_lower:
+                extracted_themes.append(theme)
+                break
+
+    # If no themes found, try to extract from common phrases
+    if not extracted_themes:
+        if any(
+            word in response_lower
+            for word in ["recommend", "suggest", "recomand"]
+        ):
+            extracted_themes = ["fiction", "literature"]
+
+    # Use extracted or default values
+    final_title = extracted_title if extracted_title else default_title
+    final_themes = extracted_themes if extracted_themes else default_themes
+
+    # Limit themes to avoid too long prompts
+    final_themes = final_themes[:3]
+
+    return final_title, final_themes
 
 
 def process_user_input(
@@ -288,10 +393,17 @@ def process_user_input(
                 ):
                     with st.spinner("Generating image..."):
                         try:
-                            # Basic approach to extract book title
-                            # This could be improved with proper NLP
+                            # Extract book title and themes from response
+                            book_title, book_themes = (
+                                extract_book_info_from_response(response)
+                            )
+
+                            st.info(
+                                f"[IMAGE] Generating cover for: '{book_title}' with themes: {', '.join(book_themes)}"
+                            )
+
                             image_path = generate_cover(
-                                "Recommended Book", ["adventure", "friendship"]
+                                book_title, book_themes
                             )
                             if image_path and image_path.exists():
                                 st.success(
@@ -299,7 +411,7 @@ def process_user_input(
                                 )
                                 st.image(
                                     str(image_path),
-                                    caption="Generated book cover",
+                                    caption=f"Generated cover for '{book_title}'",
                                     width=300,
                                 )
                         except Exception as e:
@@ -360,11 +472,14 @@ def main():
             "[VOICE] Speech-to-Text", disabled=not status.get("stt", False)
         )
         use_image = st.checkbox(
-            "[IMAGE] Generate Images", disabled=not status.get("image_gen", False)
+            "[IMAGE] Generate Images",
+            disabled=not status.get("image_gen", False),
         )
 
         # Debug options
-        st.session_state.retriever_debug = st.checkbox("[DEBUG] Show Retriever Debug")
+        st.session_state.retriever_debug = st.checkbox(
+            "[DEBUG] Show Retriever Debug"
+        )
 
         # Clear history
         if st.button("[CLEAR] Clear History"):
@@ -400,8 +515,9 @@ def main():
     with col1:
         user_input = st.text_input(
             "[INPUT] Your Question:",
-            value=selected_query if selected_query else "",
+            value="",  # Always start with empty input
             placeholder="Ask about books...",
+            key="user_input",
         )
 
     with col2:
@@ -417,14 +533,21 @@ def main():
                         st.error("Could not recognize speech")
 
     # Process input
-    if st.button("[SEND] Submit") or selected_query:
-        input_to_process = selected_query if selected_query else user_input
-        if input_to_process:
-            # Show debug info if enabled
-            display_retriever_debug(input_to_process)
+    submit_clicked = st.button("[SEND] Submit")
 
-            # Process the input
-            process_user_input(input_to_process, use_tts, use_image)
+    # Determine what input to process
+    input_to_process = None
+    if selected_query:
+        input_to_process = selected_query
+    elif submit_clicked and user_input.strip():
+        input_to_process = user_input.strip()
+
+    if input_to_process:
+        # Show debug info if enabled
+        display_retriever_debug(input_to_process)
+
+        # Process the input
+        process_user_input(input_to_process, use_tts, use_image)
 
     # Display chat history
     display_chat_history()
