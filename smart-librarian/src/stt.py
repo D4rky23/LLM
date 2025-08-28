@@ -86,15 +86,36 @@ def transcribe_with_speech_recognition(
                 )
                 return None
 
-            # Record from microphone
-            with sr.Microphone() as source:
-                logger.info("Adjusting for ambient noise...")
-                recognizer.adjust_for_ambient_noise(source, duration=1)
+            # Try different microphones
+            for mic_index in [None, 0, 1]:
+                try:
+                    if mic_index is None:
+                        microphone = sr.Microphone()
+                    else:
+                        microphone = sr.Microphone(device_index=mic_index)
 
-                logger.info(f"Recording for {duration} seconds...")
-                audio = recognizer.listen(
-                    source, timeout=duration, phrase_time_limit=duration
-                )
+                    # Record from microphone
+                    with microphone as source:
+                        logger.info("Adjusting for ambient noise...")
+                        recognizer.adjust_for_ambient_noise(
+                            source, duration=0.5
+                        )
+
+                        logger.info(f"Recording for {duration} seconds...")
+                        audio = recognizer.listen(
+                            source,
+                            timeout=duration,
+                            phrase_time_limit=duration,
+                        )
+                    break  # Successfully recorded
+
+                except Exception as mic_error:
+                    logger.warning(
+                        f"Microphone {mic_index} failed: {mic_error}"
+                    )
+                    if mic_index == 1:  # Last attempt
+                        return None
+                    continue
         else:
             # Load from audio file
             with sr.AudioFile(audio_source) as source:
@@ -153,21 +174,37 @@ def record_and_save_audio(
     try:
         recognizer = sr.Recognizer()
 
-        with sr.Microphone() as source:
-            logger.info("Adjusting for ambient noise...")
-            recognizer.adjust_for_ambient_noise(source, duration=1)
+        # Try different microphone indices if default fails
+        for mic_index in [None, 0, 1]:
+            try:
+                if mic_index is None:
+                    microphone = sr.Microphone()
+                else:
+                    microphone = sr.Microphone(device_index=mic_index)
 
-            logger.info(f"Recording for {duration} seconds...")
-            audio = recognizer.listen(
-                source, timeout=duration, phrase_time_limit=duration
-            )
+                with microphone as source:
+                    logger.info("Adjusting for ambient noise...")
+                    recognizer.adjust_for_ambient_noise(source, duration=1)
 
-        # Save audio to file
-        with open(output_path, "wb") as f:
-            f.write(audio.get_wav_data())
+                    logger.info(f"Recording for {duration} seconds...")
+                    audio = recognizer.listen(
+                        source, timeout=duration, phrase_time_limit=duration
+                    )
 
-        logger.info(f"Audio saved to: {output_path}")
-        return output_path
+                # Save audio to file
+                with open(output_path, "wb") as f:
+                    f.write(audio.get_wav_data())
+
+                logger.info(f"Audio saved to: {output_path}")
+                return output_path
+
+            except Exception as mic_error:
+                logger.warning(f"Microphone {mic_index} failed: {mic_error}")
+                continue
+
+        # If all microphones failed
+        logger.error("All microphone attempts failed")
+        return None
 
     except Exception as e:
         logger.error(f"Error recording audio: {e}")
@@ -258,19 +295,38 @@ def test_microphone() -> bool:
         recognizer = sr.Recognizer()
 
         # List available microphones
-        mic_list = sr.Microphone.list_microphone_names()
-        logger.info(f"Available microphones: {len(mic_list)}")
+        try:
+            mic_list = sr.Microphone.list_microphone_names()
+            logger.info(f"Available microphones: {len(mic_list)}")
 
-        if not mic_list:
-            logger.error("No microphones found")
-            return False
+            if not mic_list:
+                logger.error("No microphones found")
+                return False
+        except Exception as e:
+            logger.warning(f"Could not list microphones: {e}")
 
-        # Test microphone
-        with sr.Microphone() as source:
-            logger.info("Testing microphone...")
-            recognizer.adjust_for_ambient_noise(source, duration=1)
-            logger.info("Microphone test successful")
-            return True
+        # Test different microphone indices
+        for mic_index in [None, 0, 1]:
+            try:
+                if mic_index is None:
+                    microphone = sr.Microphone()
+                else:
+                    microphone = sr.Microphone(device_index=mic_index)
+
+                with microphone as source:
+                    logger.info(f"Testing microphone {mic_index}...")
+                    recognizer.adjust_for_ambient_noise(source, duration=0.5)
+                    logger.info("Microphone test successful")
+                    return True
+
+            except Exception as mic_error:
+                logger.warning(
+                    f"Microphone {mic_index} test failed: {mic_error}"
+                )
+                continue
+
+        logger.error("All microphone tests failed")
+        return False
 
     except Exception as e:
         logger.error(f"Microphone test failed: {e}")

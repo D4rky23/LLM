@@ -505,6 +505,41 @@ def main():
             disabled=not status.get("image_gen", False),
         )
 
+        # Audio file upload for STT (alternative to microphone)
+        if status.get("stt", False):
+            st.subheader("[UPLOAD] Audio File")
+            uploaded_file = st.file_uploader(
+                "Upload audio file for transcription",
+                type=["wav", "mp3", "ogg", "flac"],
+                help="Alternative to microphone recording",
+            )
+
+            if uploaded_file is not None:
+                # Save uploaded file temporarily
+                temp_path = (
+                    config.OUTPUT_DIR / f"temp_audio_{uploaded_file.name}"
+                )
+                with open(temp_path, "wb") as f:
+                    f.write(uploaded_file.getbuffer())
+
+                if st.button("🎵 Transcribe Audio File"):
+                    with st.spinner("Transcribing audio file..."):
+                        try:
+                            transcribed = transcribe(
+                                str(temp_path), method="whisper"
+                            )
+                            if transcribed:
+                                st.session_state.transcribed_text = transcribed
+                                st.success(f"Transcribed: {transcribed}")
+                            else:
+                                st.error("Could not transcribe audio file")
+                        except Exception as e:
+                            st.error(f"Transcription error: {e}")
+                        finally:
+                            # Clean up temp file
+                            if temp_path.exists():
+                                temp_path.unlink()
+
         # Debug options
         st.session_state.retriever_debug = st.checkbox(
             "[DEBUG] Show Retriever Debug"
@@ -554,12 +589,31 @@ def main():
         if use_stt and status.get("stt", False):
             if st.button("[VOICE] Speak"):
                 with st.spinner("Listening... (5 seconds)"):
-                    transcribed = transcribe("microphone", duration=5)
-                    if transcribed:
-                        user_input = transcribed
-                        st.success(f"Recognized: {transcribed}")
-                    else:
-                        st.error("Could not recognize speech")
+                    try:
+                        transcribed = transcribe("microphone", duration=5)
+                        if transcribed:
+                            # Use session state to store transcribed text
+                            st.session_state.transcribed_text = transcribed
+                            st.success(f"Recognized: {transcribed}")
+                        else:
+                            st.error(
+                                "Could not recognize speech. Please try again or use text input."
+                            )
+                    except Exception as e:
+                        st.error(f"Speech recognition error: {str(e)}")
+                        st.info(
+                            "💡 **Tip**: If microphone isn't working, you can still use Whisper API for file uploads!"
+                        )
+
+        # Display transcribed text if available
+        if hasattr(st.session_state, "transcribed_text"):
+            if st.session_state.transcribed_text:
+                st.info(
+                    f"🎤 Last transcribed: {st.session_state.transcribed_text}"
+                )
+                if st.button("Use this text"):
+                    user_input = st.session_state.transcribed_text
+                    st.session_state.transcribed_text = ""  # Clear after use
 
     # Process input
     submit_clicked = st.button("[SEND] Submit")
