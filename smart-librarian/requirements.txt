@@ -1,0 +1,14 @@
+chromadb>=0.4.20
+openai>=1.6.1
+tiktoken>=0.5.2
+pydantic>=2.5.2
+python-dotenv>=1.0.0
+typer>=0.9.0
+rich>=13.7.0
+streamlit>=1.29.0
+gTTS>=2.4.0
+SpeechRecognition>=3.10.0
+Pillow>=10.2.0
+uvicorn>=0.24.0
+fastapi>=0.104.1
+requests>=2.31.0
