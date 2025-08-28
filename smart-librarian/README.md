@@ -1,6 +1,130 @@
-# Smart Librarian
+# Smart Librarian AI 📚
 
-**Professional AI chatbot for intelligent book recommendations using RAG (Retrieval-Augmented Generation) with function calling capabilities.**
+Un sistem inteligent de recomandări de cărți folosind AI, dezvoltat cu React TypeScript frontend și FastAPI backend.
+
+## 🌟 Prezentare Generală
+
+Smart Librarian AI este o aplicație modernă care combină inteligența artificială cu o interfață utilizator intuitivă pentru a oferi recomandări personalizate de cărți. Sistemul integrează tehnologii avansate precum procesarea limbajului natural, speech-to-text, text-to-speech și generarea de imagini.
+
+## 🚀 Caracteristici Principale
+
+- **🤖 Chat AI Inteligent**: Conversații naturale pentru recomandări personalizate
+- **🎤 Intrare Vocală**: Înregistrare și transcripție audio în timp real
+- **🔊 Răspunsuri Audio**: Text-to-Speech pentru o experiență completă
+- **🎨 Generare Imagini**: Creare automată de coperte de cărți
+- **🔍 Căutare Semantică**: Căutare avansată în baza de date vectorială
+- **📊 Monitorizare Sistem**: Dashboard pentru statusul tuturor componentelor
+- **📱 Design Responsiv**: Optimizat pentru desktop și mobile
+
+## 🏗️ Arhitectura Sistemului
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   React Frontend │    │   FastAPI       │    │   AI Services   │
+│                 │    │   Backend       │    │                 │
+│ • TypeScript    │◄──►│                 │◄──►│ • OpenAI GPT    │
+│ • Tailwind CSS  │    │ • REST API      │    │ • Eleven Labs   │
+│ • Zustand       │    │ • CORS          │    │ • Whisper STT   │
+│ • React Query   │    │ • File Upload   │    │ • DALL-E        │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
+
+## 🚀 Instalare și Configurare
+
+### Prerequisites
+- **Node.js** 18+ pentru frontend
+- **Python** 3.8+ pentru backend
+- **API Keys** pentru serviciile AI
+
+### 1. Clonare Repository
+```bash
+git clone <repository-url>
+cd smart-librarian
+```
+
+### 2. Configurare Backend
+
+```bash
+# Instalează dependențele Python
+pip install -r requirements.txt
+
+# Configurează variabilele de mediu
+cp .env.example .env
+# Editează .env cu API keys-urile tale:
+# OPENAI_API_KEY=sk-...
+# ELEVENLABS_API_KEY=...
+```
+
+### 3. Configurare Frontend
+
+```bash
+# Navighează în directorul frontend
+cd frontend
+
+# Instalează dependențele Node.js
+npm install
+
+# Configurează variabilele de mediu
+echo "VITE_API_BASE_URL=http://localhost:8000" > .env.local
+```
+
+## 🎯 Rulare Aplicație
+
+### Pornire Backend (Terminal 1)
+```bash
+# În directorul root
+python backend/main.py
+
+# Sau cu uvicorn
+uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
+
+# API disponibil la: http://localhost:8000
+# Docs: http://localhost:8000/docs
+```
+
+### Pornire Frontend (Terminal 2)
+```bash
+# În directorul frontend
+cd frontend
+npm run dev
+
+# UI disponibil la: http://localhost:3000
+```
+
+## 🔑 Configurare API Keys
+
+Aplicația necesită următoarele servicii externe:
+
+### OpenAI (Obligatoriu)
+```env
+OPENAI_API_KEY=sk-proj-...
+```
+- Folosit pentru: Chat AI și recomandări
+- Obține de la: https://platform.openai.com/
+
+### Eleven Labs (Opțional - TTS)
+```env
+ELEVENLABS_API_KEY=...
+```
+- Folosit pentru: Text-to-Speech
+- Obține de la: https://elevenlabs.io/
+
+### Hugging Face (Opțional - Imagini)
+```env
+HUGGINGFACE_API_KEY=hf_...
+```
+- Folosit pentru: Generare imagini alternative
+- Obține de la: https://huggingface.co/
+
+Documentația completă și instrucțiunile de instalare se găsesc în:
+- [Frontend README](./frontend/README.md) - Ghid complet React TypeScript
+- [Backend README](./backend/README.md) - Documentație FastAPI
+
+---
+
+**Smart Librarian AI** - Dezvoltat cu ❤️ pentru iubitorii de cărți din întreaga lume.
+
+*"O carte pe zi ține ignoranța departe"* 📖✨
 
 An advanced AI-powered book recommendation system that combines **OpenAI GPT** for conversation, **ChromaDB** for semantic search, and **function calling** for detailed book summaries. Features both CLI and web interfaces with optional multimedia capabilities.
 
