@@ -295,6 +295,13 @@ def extract_book_info_from_response(response: str) -> Tuple[str, List[str]]:
 
     # Try to extract themes from the response
     theme_keywords = {
+        "good-vs-evil": [
+            "good vs evil",
+            "good versus evil",
+            "bine versus rău",
+            "moral conflict",
+            "good and evil",
+        ],
         "adventure": [
             "adventure",
             "aventură",
@@ -321,6 +328,9 @@ def extract_book_info_from_response(response: str) -> Tuple[str, List[str]]:
             "filozofie",
             "meaning",
         ],
+        "moral": ["moral", "ethics", "good", "evil", "right", "wrong"],
+        "epic": ["epic", "heroic", "grand", "legendary"],
+        "dark": ["dark", "darkness", "shadow", "noir"],
     }
 
     extracted_themes = []
@@ -339,6 +349,25 @@ def extract_book_info_from_response(response: str) -> Tuple[str, List[str]]:
             for word in ["recommend", "suggest", "recomand"]
         ):
             extracted_themes = ["fiction", "literature"]
+
+    # Generate thematic title if no specific title found but themes are present
+    if not extracted_title and extracted_themes:
+        if "good-vs-evil" in extracted_themes or "moral" in extracted_themes:
+            extracted_title = "Good vs Evil Story"
+        elif "adventure" in extracted_themes:
+            extracted_title = "Adventure Tale"
+        elif "fantasy" in extracted_themes:
+            extracted_title = "Fantasy Epic"
+        elif "love" in extracted_themes:
+            extracted_title = "Love Story"
+        elif "war" in extracted_themes:
+            extracted_title = "War Chronicle"
+        elif "mystery" in extracted_themes:
+            extracted_title = "Mystery Novel"
+        elif "science" in extracted_themes:
+            extracted_title = "Science Fiction"
+        elif "psychological" in extracted_themes:
+            extracted_title = "Psychological Thriller"
 
     # Use extracted or default values
     final_title = extracted_title if extracted_title else default_title
