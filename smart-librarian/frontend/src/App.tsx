@@ -58,24 +58,24 @@ const AppContent: React.FC = () => {
   }, [sidebarOpen]);
 
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="min-h-screen flex">
       {/* Sidebar */}
       <div
         id="sidebar"
         className={cn(
-          'fixed inset-y-0 left-0 z-50 w-80 bg-background border-r transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0',
+          'fixed inset-y-0 left-0 z-50 w-80 sidebar-glass transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0',
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
         <div className="flex flex-col h-full">
           {/* Sidebar Header */}
-          <div className="flex items-center justify-between p-4 border-b">
-            <h2 className="text-lg font-semibold">Smart Librarian</h2>
+          <div className="flex items-center justify-between p-4 border-b border-white/10">
+            <h2 className="text-lg font-semibold gradient-text">Smart Librarian</h2>
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden"
+              className="lg:hidden hover:bg-white/10"
             >
               <X className="w-5 h-5" />
             </Button>
@@ -92,27 +92,27 @@ const AppContent: React.FC = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header */}
-        <header className="bg-background border-b p-4">
+        <header className="header-glass p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setSidebarOpen(true)}
-                className="lg:hidden"
+                className="lg:hidden hover:bg-white/10"
               >
                 <Menu className="w-5 h-5" />
               </Button>
               
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
-                  <BookOpen className="w-5 h-5 text-white" />
+                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center floating-element glow-effect">
+                  <BookOpen className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  <h1 className="text-3xl font-bold gradient-text">
                     Smart Librarian AI
                   </h1>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-gray-300">
                     Discover incredible books with personalized AI recommendations
                   </p>
                 </div>
@@ -120,9 +120,9 @@ const AppContent: React.FC = () => {
             </div>
 
             {/* Status Indicator */}
-            <div className="hidden sm:flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-sm text-muted-foreground">Online</span>
+            <div className="hidden sm:flex items-center gap-2 glass-card px-3 py-2 rounded-full">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-sm text-gray-300">Online</span>
             </div>
           </div>
         </header>
@@ -141,7 +141,7 @@ const AppContent: React.FC = () => {
             <ChatHistory />
 
             {/* Chat Input */}
-            <div className="p-4 border-t bg-background">
+            <div className="p-4 header-glass">
               <ChatInput disabled={sendMessage.isPending} />
             </div>
           </div>
@@ -151,7 +151,7 @@ const AppContent: React.FC = () => {
       {/* Overlay for mobile sidebar */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black bg-opacity-60 z-40 lg:hidden backdrop-blur-sm"
           onClick={() => setSidebarOpen(false)}
         />
       )}

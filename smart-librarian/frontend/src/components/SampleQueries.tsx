@@ -1,7 +1,5 @@
 import React from 'react';
 import { Sparkles } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const sampleQueries = [
   {
@@ -42,34 +40,35 @@ interface SampleQueriesProps {
 
 export const SampleQueries: React.FC<SampleQueriesProps> = ({ onQuerySelect }) => {
   return (
-    <Card className="mb-6">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5" />
-          Try These Sample Questions
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <div className="glass-card mb-6 rounded-2xl border border-white/10">
+      <div className="p-6 border-b border-white/10">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 flex items-center justify-center">
+            <Sparkles className="w-4 h-4 text-white" />
+          </div>
+          <h3 className="text-xl font-semibold gradient-text">Try These Sample Questions</h3>
+        </div>
+      </div>
+      <div className="p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {sampleQueries.map((sample, index) => (
-            <Button
+            <button
               key={index}
-              variant="outline"
-              className="h-auto p-4 text-left justify-start hover:shadow-md transition-all duration-200 group"
+              className="sample-query-card h-auto p-5 text-left rounded-xl group"
               onClick={() => onQuerySelect(sample.query)}
             >
-              <div className="flex items-center gap-3 w-full">
-                <span className="text-lg group-hover:scale-110 transition-transform">
+              <div className="flex items-center gap-4 w-full">
+                <div className="text-2xl group-hover:scale-125 transition-transform duration-300 floating-element">
                   {sample.emoji}
-                </span>
-                <span className="text-sm flex-1 leading-relaxed">
+                </div>
+                <span className="text-sm flex-1 leading-relaxed text-gray-300 group-hover:text-white transition-colors">
                   {sample.query}
                 </span>
               </div>
-            </Button>
+            </button>
           ))}
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };

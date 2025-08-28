@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Send, Mic, Upload, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { useSendMessage, useTranscribeFile, useTranscribeMicrophone } from '@/hooks/useApi';
 import { useSettingsStore } from '@/stores';
@@ -108,14 +107,14 @@ export const ChatInput: React.FC<ChatInputProps> = ({ disabled = false }) => {
     <div className="space-y-4">
       {/* Transcribed text display */}
       {transcribedText && (
-        <Card className="border-blue-200 bg-blue-50 dark:bg-blue-900/20">
-          <CardContent className="p-3">
+        <div className="glass-card border border-blue-500/30 rounded-xl">
+          <div className="p-4">
             <div className="flex items-start justify-between gap-2">
               <div className="flex-1">
-                <p className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-1">
-                  🎤 Voice Input:
+                <p className="text-sm font-semibold text-blue-300 mb-2 flex items-center gap-2">
+                  🎤 Voice Input
                 </p>
-                <p className="text-sm text-blue-700 dark:text-blue-300">
+                <p className="text-sm text-gray-300 leading-relaxed">
                   {transcribedText}
                 </p>
               </div>
@@ -123,28 +122,28 @@ export const ChatInput: React.FC<ChatInputProps> = ({ disabled = false }) => {
                 variant="ghost"
                 size="sm"
                 onClick={clearTranscribed}
-                className="text-blue-600 hover:text-blue-800 h-auto p-1"
+                className="text-blue-400 hover:text-blue-300 hover:bg-white/10 h-auto p-2 rounded-full"
               >
                 <X className="w-4 h-4" />
               </Button>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
 
       {/* Main input form */}
-      <Card
+      <div
         className={cn(
-          'transition-all duration-200',
-          dragActive && 'border-blue-400 bg-blue-50 dark:bg-blue-900/20'
+          'glass-card rounded-xl border transition-all duration-300',
+          dragActive ? 'border-blue-500/50 bg-blue-500/10' : 'border-white/10'
         )}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
       >
-        <CardContent className="p-4">
+        <div className="p-4">
           <form onSubmit={handleSubmit} className="space-y-3">
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               <Input
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
@@ -154,7 +153,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ disabled = false }) => {
                     : 'Ask me anything about books...'
                 }
                 disabled={disabled || isLoading}
-                className="flex-1"
+                className="flex-1 input-glass border-white/20 bg-white/5 text-white placeholder:text-gray-400 focus:border-blue-500/50 focus:bg-white/10"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -172,13 +171,13 @@ export const ChatInput: React.FC<ChatInputProps> = ({ disabled = false }) => {
                   onClick={handleVoiceRecord}
                   disabled={disabled || isLoading}
                   className={cn(
-                    'transition-colors',
-                    isRecording && 'bg-red-100 border-red-300 text-red-600'
+                    'glass-card border-white/20 hover:bg-white/10 transition-all duration-300',
+                    isRecording && 'border-red-500/50 bg-red-500/20 text-red-400'
                   )}
                   title="Record voice (5 seconds)"
                 >
                   {isRecording ? (
-                    <LoadingSpinner size="sm" className="text-red-600" />
+                    <LoadingSpinner size="sm" className="text-red-400" />
                   ) : (
                     <Mic className="w-4 h-4" />
                   )}
@@ -205,7 +204,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ disabled = false }) => {
                     size="icon"
                     disabled={disabled || isLoading}
                     title="Upload audio file"
-                    className="relative"
+                    className="relative glass-card border-white/20 hover:bg-white/10"
                   >
                     <Upload className="w-4 h-4" />
                   </Button>
@@ -216,7 +215,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ disabled = false }) => {
               <Button
                 type="submit"
                 disabled={!currentText.trim() || disabled || isLoading}
-                className="px-6"
+                className="px-6 gradient-button"
               >
                 {isLoading ? (
                   <LoadingSpinner size="sm" className="text-white" />
@@ -231,14 +230,16 @@ export const ChatInput: React.FC<ChatInputProps> = ({ disabled = false }) => {
 
             {/* Drag and drop hint */}
             {dragActive && (
-              <div className="text-center py-4 text-blue-600 dark:text-blue-400">
-                <Upload className="w-8 h-8 mx-auto mb-2" />
-                <p className="text-sm">Drop audio file here to transcribe</p>
+              <div className="text-center py-6 text-blue-400">
+                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-blue-500/20 flex items-center justify-center">
+                  <Upload className="w-6 h-6" />
+                </div>
+                <p className="text-sm font-medium">Drop audio file here to transcribe</p>
               </div>
             )}
           </form>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };
