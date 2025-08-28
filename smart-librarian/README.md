@@ -1,22 +1,22 @@
-# Smart Librarian 📚🤖
+# Smart Librarian
 
 **Professional AI chatbot for intelligent book recommendations using RAG (Retrieval-Augmented Generation) with function calling capabilities.**
 
 An advanced AI-powered book recommendation system that combines **OpenAI GPT** for conversation, **ChromaDB** for semantic search, and **function calling** for detailed book summaries. Features both CLI and web interfaces with optional multimedia capabilities.
 
-## 🚀 Key Features
+## Key Features
 
-- **🔍 Intelligent Book Recommendations** using RAG (Retrieval-Augmented Generation)
-- **🛠️ Function Calling** for automatic detailed summaries
-- **🛡️ Built-in Safety Filter** for content moderation
-- **💬 CLI Interface** with Typer and Rich styling
-- **🌐 Web Interface** with Streamlit
-- **🔊 Text-to-Speech** for audio responses (optional)
-- **🎤 Speech-to-Text** for voice input (optional)
-- **🎨 AI Image Generation** for book covers (optional)
-- **📊 Local Vector Store** with ChromaDB persistence
+- **Intelligent Book Recommendations** using RAG (Retrieval-Augmented Generation)
+- **Function Calling** for automatic detailed summaries
+- **Built-in Safety Filter** for content moderation
+- **CLI Interface** with Typer and Rich styling
+- **Web Interface** with Streamlit
+- **Text-to-Speech** for audio responses (optional)
+- **Speech-to-Text** for voice input (optional)
+- **AI Image Generation** for book covers (optional)
+- **Local Vector Store** with ChromaDB persistence
 
-## 📚 Book Dataset
+## Book Dataset
 
 The project includes a curated dataset of **12 classic books** with summaries in Romanian:
 
@@ -35,7 +35,7 @@ The project includes a curated dataset of **12 classic books** with summaries in
 | Brave New World | Aldous Huxley | Social control, technology, freedom |
 | Fahrenheit 451 | Ray Bradbury | Censorship, knowledge, rebellion |
 
-## 🏗️ Architecture
+## Architecture
 
 ```mermaid
 graph LR
@@ -61,7 +61,7 @@ graph LR
 5. **Tools** (`src/ai/tools.py`) - Function calling for book summaries
 6. **Interfaces** - CLI (Typer + Rich) and Web (Streamlit)
 
-## 📦 Installation
+## Installation
 
 ### Prerequisites
 
@@ -116,7 +116,7 @@ CHROMA_PERSIST_DIR=.chroma
 python -m src.interfaces.chatbot_cli ingest
 ```
 
-## 🎯 Usage
+## Usage
 
 ### CLI Interface (Primary)
 
@@ -145,27 +145,27 @@ streamlit run src/chatbot_streamlit.py
 
 Access at: `http://localhost:8501`
 
-## 💬 Example Conversations
+## Example Conversations
 
 ### Sample Queries:
 
 **Query:** *"I want a book about friendship and magic."*
 ```
-🤖 Smart Librarian: I highly recommend 'The Hobbit' by J.R.R. Tolkien! 
+Smart Librarian: I highly recommend 'The Hobbit' by J.R.R. Tolkien! 
 This book perfectly matches your preferences for friendship and magic...
 
-🔧 [Automatic function call: get_summary_by_title("The Hobbit")]
+[Automatic function call: get_summary_by_title("The Hobbit")]
 
-📖 Detailed Summary: Bilbo Baggins is a peaceful hobbit from the Shire 
+Detailed Summary: Bilbo Baggins is a peaceful hobbit from the Shire 
 who lives a comfortable and predictable life... [4-6 complete paragraphs]
 ```
 
 **Query:** *"What do you recommend for war stories?"*
 ```
-🤖 Smart Librarian: For war stories, I recommend 'The Book Thief' by Markus Zusak...
+Smart Librarian: For war stories, I recommend 'The Book Thief' by Markus Zusak...
 
-🔧 [Automatic function call: search_books("war stories")]
-🔧 [Automatic function call: get_summary_by_title("The Book Thief")]
+[Automatic function call: search_books("war stories")]
+[Automatic function call: get_summary_by_title("The Book Thief")]
 ```
 
 ### Conversation Flow:
@@ -176,7 +176,7 @@ who lives a comfortable and predictable life... [4-6 complete paragraphs]
 3. Final Response → Optional TTS/Image Generation
 ```
 
-## ⚙️ CLI Commands Reference
+## CLI Commands Reference
 
 | Command | Description | Options |
 |---------|-------------|---------|
@@ -192,7 +192,7 @@ who lives a comfortable and predictable life... [4-6 complete paragraphs]
 - `--image` - Generate book cover images
 - `--history` - Show conversation history
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Variables
 
@@ -248,7 +248,7 @@ smart-librarian/
     └── *.wav               # Recorded audio
 ```
 
-## 🧪 Testing
+## Testing
 
 ### System Tests
 
@@ -265,16 +265,16 @@ pytest tests/ -v
 
 ### Test Coverage:
 
-- ✅ Data loading and consistency
-- ✅ Vector store functionality  
-- ✅ Function calling for summaries
-- ✅ Safety filter validation
-- ✅ Semantic search accuracy
-- ✅ CLI interface components
+- Data loading and consistency
+- Vector store functionality  
+- Function calling for summaries
+- Safety filter validation
+- Semantic search accuracy
+- CLI interface components
 
-## 🎨 Optional Features
+## Optional Features
 
-### 🔊 Text-to-Speech
+### Text-to-Speech
 
 **Libraries:** gTTS (online) or pyttsx3 (offline)
 
@@ -284,7 +284,7 @@ python -m src.interfaces.chatbot_cli chat --tts
 
 Generated audio files saved to `output/` directory.
 
-### 🎤 Speech-to-Text
+### Speech-to-Text
 
 **Libraries:** OpenAI Whisper API or SpeechRecognition + PyAudio
 
@@ -294,7 +294,7 @@ python -m src.interfaces.chatbot_cli chat --voice
 
 Supports microphone input and audio file transcription.
 
-### 🎨 AI Image Generation
+### AI Image Generation
 
 **Service:** OpenAI DALL-E 3
 
@@ -304,17 +304,17 @@ python -m src.interfaces.chatbot_cli chat --image
 
 Automatically generates book covers for recommendations.
 
-## 🔍 Why ChromaDB?
+## Why ChromaDB?
 
 ChromaDB was chosen over OpenAI Vector Store for:
 
-1. **🏠 Local Control** - Data remains on your system
-2. **💾 Persistence** - Database survives between sessions
-3. **⚡ Performance** - Fast access without API calls for search
-4. **🔧 Configurability** - Full control over indexing
-5. **💰 Cost Efficiency** - No OpenAI credits for storage
+1. **Local Control** - Data remains on your system
+2. **Persistence** - Database survives between sessions
+3. **Performance** - Fast access without API calls for search
+4. **Configurability** - Full control over indexing
+5. **Cost Efficiency** - No OpenAI credits for storage
 
-## 🚨 Troubleshooting
+## Troubleshooting
 
 ### Common Issues:
 
@@ -374,7 +374,7 @@ class FaissVectorStore:
         self.metadata = []
 ```
 
-## 📊 Performance Metrics
+## Performance Metrics
 
 - **Response Time:** ~2-3 seconds average
 - **Embedding Generation:** ~500ms per query
@@ -382,14 +382,14 @@ class FaissVectorStore:
 - **Function Calling:** ~1-2 seconds per tool
 - **Memory Usage:** ~200MB baseline + vector data
 
-## 🛡️ Security Features
+## Security Features
 
 - **Content Filtering** - Multi-layer offensive content detection
 - **Input Validation** - Pydantic schema validation
 - **API Key Protection** - Environment variable isolation
 - **Local Storage** - No data sent to third-party vector services
 
-## 📈 Future Enhancements
+## Future Enhancements
 
 - [ ] **Multi-language Support** - Additional language packs
 - [ ] **Goodreads Integration** - Real-time book data
@@ -399,7 +399,7 @@ class FaissVectorStore:
 - [ ] **Browser Extension** - Web browser plugin
 - [ ] **Library Integration** - Public library catalog search
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions! Please follow these steps:
 
@@ -426,11 +426,11 @@ flake8 src/ tests/
 pytest tests/ -v
 ```
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🆘 Support
+## Support
 
 For issues or questions:
 
@@ -450,4 +450,4 @@ For issues or questions:
 ---
 
 **Smart Librarian v1.0** - Powered by OpenAI GPT-4 & ChromaDB  
-*Intelligent book recommendations with RAG and function calling* 📚🤖
+*Intelligent book recommendations with RAG and function calling*
