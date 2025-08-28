@@ -43,7 +43,7 @@ class VectorStore:
     def search(self, query: str, top_k: int = 3) -> List[dict]:
         embedding = get_embedding(query)
         results = self.collection.query(
-            embedding=embedding,
+            query_embeddings=[embedding],
             n_results=top_k,
             include=["metadatas", "distances"],
         )
@@ -73,7 +73,16 @@ class VectorStore:
 
     def get_collection_stats(self) -> dict:
         # Basic stats
-        count = len(self.collection.get(include=["ids"])["ids"])
+        try:
+            count = self.collection.count()
+        except:
+            # Fallback for older API
+            try:
+                result = self.collection.get()
+                count = len(result["ids"]) if result and "ids" in result else 0
+            except:
+                count = 0
+
         return {
             "total_books": count,
             "persist_directory": self.persist_directory,

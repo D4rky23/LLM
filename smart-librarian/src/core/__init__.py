@@ -25,9 +25,3 @@ __all__ = [
     "get_retriever",
     "search_books",
 ]
-# Package wrapper for core modules
-import config
-import schema
-import data_loader
-
-__all__ = ["config", "schema", "data_loader"]

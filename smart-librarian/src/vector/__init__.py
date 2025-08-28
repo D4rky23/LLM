@@ -9,8 +9,3 @@ __all__ = [
     "get_embedding",
     "get_embeddings_batch",
 ]
-# Package wrapper for vector modules
-import vector_store
-import embeddings
-
-__all__ = ["vector_store", "embeddings"]

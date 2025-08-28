@@ -3,18 +3,20 @@
 from typing import List
 from core.config import config
 
-import openai
+from openai import OpenAI
 
 
 def get_embedding(text: str) -> List[float]:
-    openai.api_key = config.OPENAI_API_KEY
-    resp = openai.Embedding.create(input=text, model=config.OPENAI_EMBED_MODEL)
-    return resp["data"][0]["embedding"]
+    client = OpenAI(api_key=config.OPENAI_API_KEY)
+    resp = client.embeddings.create(
+        input=text, model=config.OPENAI_EMBED_MODEL
+    )
+    return resp.data[0].embedding
 
 
 def get_embeddings_batch(texts: List[str]) -> List[List[float]]:
-    openai.api_key = config.OPENAI_API_KEY
-    resp = openai.Embedding.create(
+    client = OpenAI(api_key=config.OPENAI_API_KEY)
+    resp = client.embeddings.create(
         input=texts, model=config.OPENAI_EMBED_MODEL
     )
-    return [d["embedding"] for d in resp["data"]]
+    return [d.embedding for d in resp.data]

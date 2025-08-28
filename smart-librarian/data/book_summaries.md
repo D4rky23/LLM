@@ -1,47 +1,47 @@
 ## Title: 1984
-Rezumat scurt: O societate totalitară condusă de supraveghere și propagandă. Winston Smith se revoltă în taină căutând adevărul și libertatea.
-Teme: libertate, control social, manipulare, supraveghere
+Short Summary: A totalitarian society ruled by surveillance and propaganda. Winston Smith secretly rebels seeking truth and freedom.
+Themes: freedom, social control, manipulation, surveillance
 
 ## Title: The Hobbit
-Rezumat scurt: Bilbo pornește într-o aventură neașteptată alături de pitici pentru a recupera comoara păzită de Smaug.
-Teme: prietenie, curaj, aventură, maturizare
+Short Summary: Bilbo embarks on an unexpected adventure alongside dwarves to recover treasure guarded by Smaug.
+Themes: friendship, courage, adventure, coming-of-age
 
 ## Title: Dune
-Rezumat scurt: Pe planeta deșertică Arrakis, Paul Atreides devine liderul unei revoluții galactice pentru controlul speciei vitale.
-Teme: putere, politică, religie, ecologie
+Short Summary: On the desert planet Arrakis, Paul Atreides becomes the leader of a galactic revolution for control of vital spice.
+Themes: power, politics, religion, ecology
 
 ## Title: To Kill a Mockingbird
-Rezumat scurt: În sudul segregat al Americii, Scout Finch învață despre justiție prin cazul apărat de tatăl ei, avocatul Atticus.
-Teme: justiție, prejudecăți, maturizare, curaj moral
+Short Summary: In segregated America, Scout Finch learns about justice through the case defended by her father, lawyer Atticus.
+Themes: justice, prejudice, coming-of-age, moral courage
 
 ## Title: The Catcher in the Rye
-Rezumat scurt: Adolescentul rebel Holden Caulfield vagabondează prin New York căutând autenticitate într-o lume falsă.
-Teme: adolescență, alienare, identitate, inocență
+Short Summary: Rebellious teenager Holden Caulfield wanders through New York seeking authenticity in a false world.
+Themes: adolescence, alienation, identity, innocence
 
 ## Title: The Lord of the Rings
-Rezumat scurt: Frodo și prietenii săi pornesc într-o misiune epică pentru a distruge Inelul Unic și a salva Pământul de Mijloc.
-Teme: prietenie, curaj, sacrificiu, bine versus rău
+Short Summary: Frodo and his friends embark on an epic mission to destroy the One Ring and save Middle-earth.
+Themes: friendship, courage, sacrifice, good versus evil
 
 ## Title: Pride and Prejudice
-Rezumat scurt: Elizabeth Bennet și domnul Darcy depășesc prejudecățile sociale și personale pentru a găsi iubirea adevărată.
-Teme: iubire, prejudecăți, societate, independență
+Short Summary: Elizabeth Bennet and Mr. Darcy overcome social and personal prejudices to find true love.
+Themes: love, prejudice, society, independence
 
 ## Title: The Name of the Wind
-Rezumat scurt: Kvothe, un tânăr cu abilități magice extraordinare, își povestește aventurile și căutarea răzbunării.
-Teme: magie, cunoaștere, dragoste, răzbunare
+Short Summary: Kvothe, a young man with extraordinary magical abilities, tells his adventures and quest for revenge.
+Themes: magic, knowledge, love, revenge
 
 ## Title: The Book Thief
-Rezumat scurt: În Germania nazistă, Liesel găsește refugiu și speranță în cărți în timpul celui de-al Doilea Război Mondial.
-Teme: război, speranță, puterea cuvintelor, umanitate
+Short Summary: In Nazi Germany, Liesel finds refuge and hope in books during World War II.
+Themes: war, hope, power of words, humanity
 
 ## Title: The Kite Runner
-Rezumat scurt: Amir încearcă să se răscumpere pentru trădarea din copilărie a prietenului său Hassan în Afganistanul tulburat.
-Teme: prietenie, vinovăție, răscumpărare, război
+Short Summary: Amir tries to redeem himself for his childhood betrayal of his friend Hassan in troubled Afghanistan.
+Themes: friendship, guilt, redemption, war
 
 ## Title: Brave New World
-Rezumat scurt: O societate distopică controlează cetățenii prin plăcere și condiționare, până când un outsider pune la îndoială sistemul.
-Teme: control social, tehnologie, libertate, umanitate
+Short Summary: A dystopian society controls citizens through pleasure and conditioning, until an outsider questions the system.
+Themes: social control, technology, freedom, humanity
 
 ## Title: Fahrenheit 451
-Rezumat scurt: Într-o societate unde cărțile sunt interzise, pompierul Guy Montag începe să pună la îndoială misiunea sa de a le arde.
-Teme: cenzură, cunoaștere, conformism, rebeliune
+Short Summary: In a society where books are banned, fireman Guy Montag begins to question his mission to burn them.
+Themes: censorship, knowledge, conformism, rebellion

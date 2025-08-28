@@ -20,7 +20,7 @@ except ImportError:
     PYAUDIO_AVAILABLE = False
 
 import openai
-from .config import config
+from core.config import config
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)

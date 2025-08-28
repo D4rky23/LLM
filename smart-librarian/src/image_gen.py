@@ -5,18 +5,18 @@ from pathlib import Path
 from typing import List, Optional
 import re
 
-import openai
+from openai import OpenAI
 from PIL import Image
 import requests
 
-from .config import config
+from core.config import config
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Initialize OpenAI client
-openai.api_key = config.OPENAI_API_KEY
+client = OpenAI(api_key=config.OPENAI_API_KEY)
 
 
 def create_safe_filename(title: str) -> str:
@@ -85,7 +85,7 @@ def generate_cover_with_dalle(
             f"Generating cover for '{title}' with prompt: {prompt[:100]}..."
         )
 
-        response = openai.images.generate(
+        response = client.images.generate(
             model="dall-e-3", prompt=prompt, size=size, quality=quality, n=1
         )
 

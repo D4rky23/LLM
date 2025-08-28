@@ -10,83 +10,91 @@ import time
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 
-from config import config
-from llm import get_chatbot
-from vector_store import initialize_vector_store
-from data_loader import load_books_data
+from core.config import config
+from ai.llm import get_chatbot
+from vector.vector_store import initialize_vector_store
+from core.data_loader import load_books_data
 from tts import speak, is_tts_available
 from stt import transcribe, is_stt_available
 from image_gen import generate_cover, is_image_generation_available
-from retriever import get_retriever
+from core.retriever import get_retriever
 
 
 # Page configuration
 st.set_page_config(
     page_title="Smart Librarian",
-    page_icon="📚",
+    page_icon="�",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
-# Custom CSS
+# Custom CSS for professional appearance and better contrast
 st.markdown(
     """
 <style>
 .main-header {
     font-size: 2.5rem;
-    color: #1f77b4;
+    color: #1a365d;
     text-align: center;
     margin-bottom: 2rem;
+    font-weight: 600;
 }
 
 .chat-message {
-    padding: 1rem;
+    padding: 1.2rem;
     border-radius: 0.5rem;
-    margin: 0.5rem 0;
+    margin: 0.8rem 0;
+    border: 1px solid #e2e8f0;
 }
 
 .user-message {
-    background-color: #e3f2fd;
-    border-left: 4px solid #2196f3;
+    background-color: #f7fafc;
+    border-left: 4px solid #3182ce;
+    color: #2d3748;
 }
 
 .assistant-message {
-    background-color: #f1f8e9;
-    border-left: 4px solid #4caf50;
+    background-color: #f0fff4;
+    border-left: 4px solid #38a169;
+    color: #2d3748;
 }
 
 .sample-query {
     cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 0.25rem;
-    border: 1px solid #ddd;
-    margin: 0.25rem 0;
-    background-color: #f8f9fa;
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+    border: 1px solid #cbd5e0;
+    margin: 0.5rem 0;
+    background-color: #ffffff;
+    color: #2d3748;
+    font-weight: 500;
 }
 
 .sample-query:hover {
-    background-color: #e9ecef;
+    background-color: #edf2f7;
+    border-color: #a0aec0;
 }
 
 .feature-status {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem;
-    border-radius: 0.25rem;
-    margin: 0.25rem 0;
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+    margin: 0.5rem 0;
+    font-weight: 500;
 }
 
 .feature-available {
-    background-color: #d4edda;
-    border: 1px solid #c3e6cb;
-    color: #155724;
+    background-color: #f0fff4;
+    border: 1px solid #9ae6b4;
+    color: #22543d;
 }
 
 .feature-unavailable {
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    color: #721c24;
+    background-color: #fed7d7;
+    border: 1px solid #feb2b2;
+    color: #742a2a;
 }
 </style>
 """,
@@ -167,37 +175,37 @@ def check_system_status():
 
 def display_system_status(status, errors):
     """Display system status in sidebar."""
-    st.sidebar.header("📊 System Status")
+    st.sidebar.header("[SYSTEM] Status Overview")
 
     components = [
-        ("config", "⚙️ Configuration"),
-        ("data", "📚 Data Loading"),
-        ("vector_store", "🔍 Vector Store"),
-        ("chatbot", "🤖 Chatbot"),
-        ("tts", "🔊 Text-to-Speech"),
-        ("stt", "🎤 Speech-to-Text"),
-        ("image_gen", "🖼️ Image Generation"),
+        ("config", "[CONFIG] Configuration"),
+        ("data", "[DATA] Data Loading"),
+        ("vector_store", "[SEARCH] Vector Store"),
+        ("chatbot", "[AI] Chatbot"),
+        ("tts", "[AUDIO] Text-to-Speech"),
+        ("stt", "[VOICE] Speech-to-Text"),
+        ("image_gen", "[IMAGE] Image Generation"),
     ]
 
     for key, label in components:
         if status.get(key, False):
-            st.sidebar.markdown(f"✅ {label}")
+            st.sidebar.markdown(f"**✓ {label}** - Ready")
         else:
-            error_msg = errors.get(key, "Indisponibil")
-            st.sidebar.markdown(f"❌ {label}")
+            error_msg = errors.get(key, "Unavailable")
+            st.sidebar.markdown(f"**✗ {label}** - Error")
             if key in errors:
-                st.sidebar.caption(f"Error: {error_msg}")
+                st.sidebar.caption(f"Details: {error_msg}")
 
 
 def display_sample_queries():
     """Display sample queries that users can click."""
-    st.subheader("💡 Exemple de întrebări")
+    st.subheader("[SAMPLES] Example Questions")
 
     sample_queries = [
-        "Vreau o carte despre prietenie și magie.",
-        "Ce recomanzi pentru cineva care iubește povești de război?",
-        "Vreau o carte despre libertate și control social.",
-        "Ce este 1984?",
+        "I want a book about friendship and magic.",
+        "What do you recommend for someone who loves war stories?",
+        "I want a book about freedom and social control.",
+        "What is 1984 about?",
     ]
 
     for i, query in enumerate(sample_queries):
@@ -210,7 +218,7 @@ def display_sample_queries():
 def display_chat_history():
     """Display chat history."""
     if st.session_state.chat_history:
-        st.subheader("💬 Conversație")
+        st.subheader("[CHAT] Conversation History")
 
         for i, (role, message, timestamp) in enumerate(
             st.session_state.chat_history
@@ -219,7 +227,7 @@ def display_chat_history():
                 st.markdown(
                     f"""
                 <div class="chat-message user-message">
-                    <strong>👤 Tu ({timestamp}):</strong><br>
+                    <strong>[USER] You ({timestamp}):</strong><br>
                     {message}
                 </div>
                 """,
@@ -229,7 +237,7 @@ def display_chat_history():
                 st.markdown(
                     f"""
                 <div class="chat-message assistant-message">
-                    <strong>🤖 Smart Librarian ({timestamp}):</strong><br>
+                    <strong>[AI] Smart Librarian ({timestamp}):</strong><br>
                     {message}
                 </div>
                 """,
@@ -249,7 +257,7 @@ def process_user_input(
     st.session_state.chat_history.append(("user", user_input, timestamp))
 
     # Process with chatbot
-    with st.spinner("Procesare răspuns..."):
+    with st.spinner("Processing response..."):
         try:
             response = st.session_state.chatbot.chat(user_input)
 
@@ -260,10 +268,10 @@ def process_user_input(
 
             # Generate TTS if enabled
             if use_tts and st.session_state.system_status.get("tts", False):
-                with st.spinner("Generare audio..."):
+                with st.spinner("Generating audio..."):
                     audio_path = speak(response)
                     if audio_path and audio_path.exists():
-                        st.success(f"🔊 Audio generat: {audio_path.name}")
+                        st.success(f"[AUDIO] Generated: {audio_path.name}")
 
                         # Play audio in browser
                         with open(audio_path, "rb") as audio_file:
@@ -275,30 +283,30 @@ def process_user_input(
                 "image_gen", False
             ):
                 if (
-                    "recomand" in response.lower()
-                    or "carte" in response.lower()
+                    "recommend" in response.lower()
+                    or "book" in response.lower()
                 ):
-                    with st.spinner("Generare imagine..."):
+                    with st.spinner("Generating image..."):
                         try:
                             # Basic approach to extract book title
                             # This could be improved with proper NLP
                             image_path = generate_cover(
-                                "Cartea Recomandată", ["aventură", "prietenie"]
+                                "Recommended Book", ["adventure", "friendship"]
                             )
                             if image_path and image_path.exists():
                                 st.success(
-                                    f"🖼️ Imagine generată: {image_path.name}"
+                                    f"[IMAGE] Generated: {image_path.name}"
                                 )
                                 st.image(
                                     str(image_path),
-                                    caption="Copertă generată",
+                                    caption="Generated book cover",
                                     width=300,
                                 )
                         except Exception as e:
-                            st.error(f"Eroare la generarea imaginii: {e}")
+                            st.error(f"Image generation error: {e}")
 
         except Exception as e:
-            st.error(f"Eroare la procesarea răspunsului: {e}")
+            st.error(f"Error processing response: {e}")
 
 
 def display_retriever_debug(user_input: str):
@@ -311,14 +319,14 @@ def display_retriever_debug(user_input: str):
         books_with_scores = retriever.search_with_scores(user_input, top_k=5)
 
         if books_with_scores:
-            st.subheader("🔍 Debug: Rezultate căutare")
+            st.subheader("[DEBUG] Search Results")
 
             for book, score in books_with_scores:
                 with st.expander(f"{book.title} (Score: {score:.3f})"):
-                    st.write(f"**Rezumat:** {book.short_summary}")
-                    st.write(f"**Teme:** {', '.join(book.themes)}")
+                    st.write(f"**Summary:** {book.short_summary}")
+                    st.write(f"**Themes:** {', '.join(book.themes)}")
     except Exception as e:
-        st.error(f"Eroare debug retriever: {e}")
+        st.error(f"Retriever debug error: {e}")
 
 
 def main():
@@ -328,11 +336,11 @@ def main():
 
     # Header
     st.markdown(
-        '<h1 class="main-header">📚 Smart Librarian</h1>',
+        '<h1 class="main-header">[AI] Smart Librarian</h1>',
         unsafe_allow_html=True,
     )
     st.markdown(
-        "*AI chatbot pentru recomandări de cărți cu RAG și tool calling*"
+        "*Professional AI chatbot for book recommendations with RAG and tool calling*"
     )
 
     # Check system status
@@ -342,31 +350,31 @@ def main():
     with st.sidebar:
         display_system_status(status, errors)
 
-        st.header("⚙️ Opțiuni")
+        st.header("[OPTIONS] Settings")
 
         # Feature toggles
         use_tts = st.checkbox(
-            "🔊 Text-to-Speech", disabled=not status.get("tts", False)
+            "[AUDIO] Text-to-Speech", disabled=not status.get("tts", False)
         )
         use_stt = st.checkbox(
-            "🎤 Speech-to-Text", disabled=not status.get("stt", False)
+            "[VOICE] Speech-to-Text", disabled=not status.get("stt", False)
         )
         use_image = st.checkbox(
-            "🖼️ Generare imagini", disabled=not status.get("image_gen", False)
+            "[IMAGE] Generate Images", disabled=not status.get("image_gen", False)
         )
 
         # Debug options
-        st.session_state.retriever_debug = st.checkbox("🔍 Debug retriever")
+        st.session_state.retriever_debug = st.checkbox("[DEBUG] Show Retriever Debug")
 
         # Clear history
-        if st.button("🗑️ Șterge istoric"):
+        if st.button("[CLEAR] Clear History"):
             st.session_state.chat_history = []
             if st.session_state.chatbot:
                 st.session_state.chatbot.clear_history()
-            st.success("Istoric șters!")
+            st.success("History cleared!")
 
         # System info
-        if st.button("ℹ️ Info sistem"):
+        if st.button("[INFO] System Information"):
             try:
                 retriever = get_retriever()
                 stats = retriever.get_retriever_stats()
@@ -374,12 +382,12 @@ def main():
                 st.write("**System Information:**")
                 st.json(stats)
             except Exception as e:
-                st.error(f"Eroare la obținerea informațiilor: {e}")
+                st.error(f"Error retrieving system information: {e}")
 
     # Main interface
     if not all([status["config"], status["data"], status["chatbot"]]):
         st.error(
-            "🚫 Sistemul nu este complet inițializat. Verifică statusul din sidebar."
+            "[ERROR] System is not fully initialized. Check the status in the sidebar."
         )
         return
 
@@ -391,25 +399,25 @@ def main():
 
     with col1:
         user_input = st.text_input(
-            "💬 Întrebare:",
+            "[INPUT] Your Question:",
             value=selected_query if selected_query else "",
-            placeholder="Întreabă despre cărți...",
+            placeholder="Ask about books...",
         )
 
     with col2:
         # Voice input button
         if use_stt and status.get("stt", False):
-            if st.button("🎤 Vorbește"):
-                with st.spinner("Ascult... (5 secunde)"):
+            if st.button("[VOICE] Speak"):
+                with st.spinner("Listening... (5 seconds)"):
                     transcribed = transcribe("microphone", duration=5)
                     if transcribed:
                         user_input = transcribed
-                        st.success(f"Recunoscut: {transcribed}")
+                        st.success(f"Recognized: {transcribed}")
                     else:
-                        st.error("Nu am putut recunoaște vocea")
+                        st.error("Could not recognize speech")
 
     # Process input
-    if st.button("📤 Trimite") or selected_query:
+    if st.button("[SEND] Submit") or selected_query:
         input_to_process = selected_query if selected_query else user_input
         if input_to_process:
             # Show debug info if enabled
@@ -418,9 +426,6 @@ def main():
             # Process the input
             process_user_input(input_to_process, use_tts, use_image)
 
-            # Rerun to update the interface
-            st.rerun()
-
     # Display chat history
     display_chat_history()
 
@@ -428,7 +433,7 @@ def main():
     st.markdown("---")
     st.markdown(
         """
-    <div style="text-align: center; color: #666;">
+    <div style="text-align: center; color: #4a5568; font-weight: 500;">
         Smart Librarian v1.0 | Powered by OpenAI GPT & ChromaDB
     </div>
     """,

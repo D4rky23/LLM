@@ -211,9 +211,9 @@ class BookRetriever:
             Formatted context string
         """
         if not books:
-            return "Nu am găsit cărți relevante pentru această căutare."
+            return "No relevant books found for this search."
 
-        context_parts = ["Cărți relevante găsite:"]
+        context_parts = ["Relevant books found:"]
 
         for i, book in enumerate(books[:max_books], 1):
             themes_str = ", ".join(book.themes)

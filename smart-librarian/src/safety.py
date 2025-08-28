@@ -4,7 +4,7 @@ import re
 import logging
 from typing import List, Set
 
-from .config import config
+from core.config import config
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -224,9 +224,9 @@ def validate_safety_filter() -> bool:
         ("I hate violence", True),
         ("STOP SHOUTING!!!", True),
         # Should be safe
-        ("Vreau o carte despre prietenie", False),
-        ("Ce recomanzi pentru o poveste frumoasă?", False),
-        ("Mulțumesc pentru recomandare!", False),
+        ("I want a book about friendship", False),
+        ("What do you recommend for a beautiful story?", False),
+        ("Thank you for the recommendation!", False),
     ]
 
     all_passed = True
@@ -250,11 +250,11 @@ if __name__ == "__main__":
 
     # Test cases
     test_texts = [
-        "Vreau o carte despre prietenie și magie",
-        "Ce recomanzi pentru povești de război?",
+        "I want a book about friendship and magic",
+        "What do you recommend for war stories?",
         "This is hate speech and violence!",
         "STOP SHOUTING AT ME!!!",
-        "Mulțumesc pentru recomandare",
+        "Thank you for the recommendation",
         "hate violence discrimination",
     ]
 

@@ -25,7 +25,7 @@ class Config:
     CHROMA_COLLECTION_NAME: str = "book_summaries"
 
     # Data Paths
-    PROJECT_ROOT: Path = Path(__file__).parent.parent
+    PROJECT_ROOT: Path = Path(__file__).parent.parent.parent
     DATA_DIR: Path = PROJECT_ROOT / "data"
     BOOK_SUMMARIES_MD: Path = DATA_DIR / "book_summaries.md"
     BOOK_SUMMARIES_JSON: Path = DATA_DIR / "book_summaries.json"

@@ -18,7 +18,7 @@ try:
 except ImportError:
     PYTTSX3_AVAILABLE = False
 
-from .config import config
+from core.config import config
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -123,7 +123,7 @@ def speak(
         import time
 
         timestamp = int(time.time())
-        output_filename = f"recomandare_{timestamp}.mp3"
+        output_filename = f"recommendation_{timestamp}.mp3"
 
     output_path = config.OUTPUT_DIR / output_filename
 
@@ -241,7 +241,7 @@ def test_tts(
 
 if __name__ == "__main__":
     # Test TTS functionality
-    test_text = "Bună ziua! Aceasta este Smart Librarian. Recomand cartea 1984 de George Orwell."
+    test_text = "Hello! This is Smart Librarian. I recommend the book 1984 by George Orwell."
 
     print("Testing Text-to-Speech...")
 
