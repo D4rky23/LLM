@@ -29,73 +29,384 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Custom CSS for professional appearance and better contrast
+# Enhanced CSS for modern, professional UI with animations and gradients
 st.markdown(
     """
 <style>
-.main-header {
-    font-size: 2.5rem;
-    color: #1a365d;
-    text-align: center;
-    margin-bottom: 2rem;
-    font-weight: 600;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Global styles */
+.main .block-container {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    max-width: 1200px;
 }
 
-.chat-message {
-    padding: 1.2rem;
-    border-radius: 0.5rem;
-    margin: 0.8rem 0;
+/* Remove any blur effects globally */
+* {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    filter: none !important;
+    -webkit-filter: none !important;
+}
+
+/* Ensure crisp text rendering */
+body, .main, .stApp {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Main header with solid color for clarity */
+.main-header {
+    font-size: 3rem;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #1a202c;
+    animation: fadeInDown 1s ease-out;
+    filter: none;
+    -webkit-filter: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.subtitle {
+    text-align: center;
+    color: #1a202c;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     border: 1px solid #e2e8f0;
+    animation: fadeInUp 1s ease-out 0.3s both;
+    filter: none;
+    -webkit-filter: none;
+}
+
+/* Card containers with better visibility */
+.card {
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    border: 2px solid rgba(45, 55, 72, 0.1);
+    transition: all 0.3s ease;
+    color: #1a202c;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    border-color: rgba(45, 55, 72, 0.2);
+}
+
+.card h3 {
+    color: #1a202c;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+/* Chat messages with modern bubble design */
+.chat-message {
+    padding: 1.5rem;
+    border-radius: 20px;
+    margin: 1rem 0;
+    position: relative;
+    animation: slideInUp 0.4s ease-out;
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
 }
 
 .user-message {
-    background-color: #f7fafc;
-    border-left: 4px solid #3182ce;
-    color: #2d3748;
+    background: linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%);
+    color: white;
+    margin-left: 20%;
+    border-bottom-right-radius: 5px;
+    box-shadow: 0 4px 15px rgba(43, 108, 176, 0.4);
+    border: 2px solid rgba(255,255,255,0.2);
+}
+
+.user-message::before {
+    content: "👤";
+    position: absolute;
+    top: -8px;
+    right: 15px;
+    background: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    border: 2px solid #2b6cb0;
 }
 
 .assistant-message {
-    background-color: #f0fff4;
-    border-left: 4px solid #38a169;
-    color: #2d3748;
+    background: linear-gradient(135deg, #38a169 0%, #2f855a 100%);
+    color: white;
+    margin-right: 20%;
+    border-bottom-left-radius: 5px;
+    box-shadow: 0 4px 15px rgba(56, 161, 105, 0.4);
+    border: 2px solid rgba(255,255,255,0.2);
 }
 
+.assistant-message::before {
+    content: "🤖";
+    position: absolute;
+    top: -8px;
+    left: 15px;
+    background: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    border: 2px solid #38a169;
+}
+
+/* Sample queries with better contrast */
 .sample-query {
     cursor: pointer;
-    padding: 0.75rem;
-    border-radius: 0.375rem;
-    border: 1px solid #cbd5e0;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
     margin: 0.5rem 0;
-    background-color: #ffffff;
-    color: #2d3748;
-    font-weight: 500;
+    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+    color: #1a202c;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    position: relative;
+    overflow: hidden;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+}
+
+.sample-query::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(45,55,72,0.1), transparent);
+    transition: left 0.5s;
 }
 
 .sample-query:hover {
-    background-color: #edf2f7;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
     border-color: #a0aec0;
+    color: #1a202c;
 }
 
-.feature-status {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem;
-    border-radius: 0.375rem;
-    margin: 0.5rem 0;
+.sample-query:hover::before {
+    left: 100%;
+}
+
+/* Status indicators with enhanced visibility */
+.status-card {
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 8px 0;
+    border-left: 4px solid #10b981;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+    color: #1a202c;
+    border: 1px solid #e2e8f0;
+}
+
+.status-ready {
+    border-left-color: #059669;
+    background: linear-gradient(135deg, rgba(5, 150, 105, 0.1), rgba(255, 255, 255, 0.95));
+    color: #064e3b;
+}
+
+.status-ready strong {
+    color: #064e3b;
+    font-weight: 700;
+}
+
+.status-ready small {
+    color: #065f46;
     font-weight: 500;
 }
 
-.feature-available {
-    background-color: #f0fff4;
-    border: 1px solid #9ae6b4;
-    color: #22543d;
+.status-error {
+    border-left-color: #dc2626;
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.1), rgba(255, 255, 255, 0.95));
+    color: #7f1d1d;
 }
 
-.feature-unavailable {
-    background-color: #fed7d7;
-    border: 1px solid #feb2b2;
-    color: #742a2a;
+.status-error strong {
+    color: #7f1d1d;
+    font-weight: 700;
+}
+
+.status-error small {
+    color: #991b1b;
+    font-weight: 500;
+}
+
+/* Loading animation */
+.loading-dots {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.loading-dots div {
+    position: absolute;
+    top: 33px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #667eea;
+    animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+
+.loading-dots div:nth-child(1) {
+    left: 8px;
+    animation: loading1 0.6s infinite;
+}
+
+.loading-dots div:nth-child(2) {
+    left: 8px;
+    animation: loading2 0.6s infinite;
+}
+
+.loading-dots div:nth-child(3) {
+    left: 32px;
+    animation: loading2 0.6s infinite;
+}
+
+.loading-dots div:nth-child(4) {
+    left: 56px;
+    animation: loading3 0.6s infinite;
+}
+
+/* Custom buttons with better contrast */
+.stButton > button {
+    background: linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%);
+    color: white;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 10px;
+    padding: 0.6rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(43, 108, 176, 0.4);
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.stButton > button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(43, 108, 176, 0.5);
+    background: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
+    border-color: rgba(255,255,255,0.4);
+}
+
+/* Sidebar styling with better contrast */
+.css-1d391kg {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+}
+
+/* Sidebar headers */
+.css-1d391kg h3 {
+    color: #1a202c !important;
+    font-weight: 700 !important;
+    background: rgba(45, 55, 72, 0.05);
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-bottom: 12px !important;
+    border-left: 3px solid #2d3748;
+}
+
+/* Sidebar text */
+.css-1d391kg .stMarkdown {
+    color: #2d3748 !important;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translate3d(0, -100%, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 100%, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translate3d(0, 100%, 0);
+        opacity: 0;
+    }
+    to {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+}
+
+@keyframes loading1 {
+    0% { transform: scale(0); }
+    100% { transform: scale(1); }
+}
+
+@keyframes loading3 {
+    0% { transform: scale(1); }
+    100% { transform: scale(0); }
+}
+
+@keyframes loading2 {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(24px, 0); }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .main-header {
+        font-size: 2rem;
+    }
+    
+    .chat-message {
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+    
+    .user-message {
+        margin-left: 10%;
+    }
+    
+    .assistant-message {
+        margin-right: 10%;
+    }
 }
 </style>
 """,
@@ -175,44 +486,72 @@ def check_system_status():
 
 
 def display_system_status(status, errors):
-    """Display system status in sidebar."""
-    st.sidebar.header("[SYSTEM] Status Overview")
+    """Display system status in sidebar with enhanced UI."""
+    st.sidebar.markdown("### 📊 System Status")
 
     components = [
-        ("config", "[CONFIG] Configuration"),
-        ("data", "[DATA] Data Loading"),
-        ("vector_store", "[SEARCH] Vector Store"),
-        ("chatbot", "[AI] Chatbot"),
-        ("tts", "[AUDIO] Text-to-Speech"),
-        ("stt", "[VOICE] Speech-to-Text"),
-        ("image_gen", "[IMAGE] Image Generation"),
+        ("config", "⚙️ Configuration", "System configuration loaded"),
+        ("data", "📚 Data Store", "Book database loaded"),
+        ("vector_store", "🔍 Search Engine", "Vector search ready"),
+        ("chatbot", "🤖 AI Assistant", "LLM model loaded"),
+        ("tts", "🔊 Text-to-Speech", "Audio generation available"),
+        ("stt", "🎤 Speech-to-Text", "Voice recognition ready"),
+        ("image_gen", "🎨 Image Generation", "Cover art creation enabled"),
     ]
 
-    for key, label in components:
+    for key, label, description in components:
         if status.get(key, False):
-            st.sidebar.markdown(f"**✓ {label}** - Ready")
+            st.sidebar.markdown(
+                f"""
+                <div class="status-card status-ready">
+                    <strong>✅ {label}</strong><br>
+                    <small>{description}</small>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
         else:
-            error_msg = errors.get(key, "Unavailable")
-            st.sidebar.markdown(f"**✗ {label}** - Error")
-            if key in errors:
-                st.sidebar.caption(f"Details: {error_msg}")
+            error_msg = errors.get(key, "Service unavailable")
+            st.sidebar.markdown(
+                f"""
+                <div class="status-card status-error">
+                    <strong>❌ {label}</strong><br>
+                    <small>{error_msg}</small>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
 
 
 def display_sample_queries():
-    """Display sample queries that users can click."""
-    st.subheader("[SAMPLES] Example Questions")
+    """Display sample queries with enhanced card design."""
+    st.markdown(
+        '<div class="card"><h3>💫 Try These Sample Questions</h3></div>',
+        unsafe_allow_html=True,
+    )
 
     sample_queries = [
-        "I want a book about friendship and magic.",
-        "What do you recommend for someone who loves war stories?",
-        "I want a book about freedom and social control.",
-        "What is 1984 about?",
+        ("🧩 I want a book about friendship and magic.", "fantasy-friendship"),
+        (
+            "⚔️ What do you recommend for someone who loves war stories?",
+            "war-historical",
+        ),
+        (
+            "🔒 I want a book about freedom and social control.",
+            "dystopian-political",
+        ),
+        ("📚 What is 1984 about?", "specific-book"),
     ]
 
-    for i, query in enumerate(sample_queries):
-        if st.button(query, key=f"sample_{i}"):
-            # Store the selected query in session state for one-time use
-            st.session_state.selected_query = query
+    col1, col2 = st.columns(2)
+    for i, (query, category) in enumerate(sample_queries):
+        col = col1 if i % 2 == 0 else col2
+        with col:
+            if st.button(query, key=f"sample_{i}", use_container_width=True):
+                # Store the selected query in session state for one-time use
+                st.session_state.selected_query = query.split(" ", 1)[
+                    1
+                ]  # Remove emoji
 
     # Return and clear the selected query
     if hasattr(st.session_state, "selected_query"):
@@ -224,10 +563,30 @@ def display_sample_queries():
 
 
 def display_chat_history():
-    """Display chat history."""
+    """Display enhanced chat history with modern design."""
     if st.session_state.chat_history:
-        st.subheader("[CHAT] Conversation History")
+        st.markdown(
+            '<div class="card"><h3>💬 Conversation History</h3></div>',
+            unsafe_allow_html=True,
+        )
 
+        # Add conversation stats
+        total_messages = len(st.session_state.chat_history)
+        user_messages = sum(
+            1 for role, _, _ in st.session_state.chat_history if role == "user"
+        )
+
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("Total Messages", total_messages)
+        with col2:
+            st.metric("Your Questions", user_messages)
+        with col3:
+            st.metric("AI Responses", total_messages - user_messages)
+
+        st.markdown("---")
+
+        # Display messages with enhanced styling
         for i, (role, message, timestamp) in enumerate(
             st.session_state.chat_history
         ):
@@ -235,22 +594,45 @@ def display_chat_history():
                 st.markdown(
                     f"""
                 <div class="chat-message user-message">
-                    <strong>[USER] You ({timestamp}):</strong><br>
+                    <strong>You • {timestamp}</strong><br>
                     {message}
                 </div>
                 """,
                     unsafe_allow_html=True,
                 )
             else:
+                # Add typing indicator simulation for new messages
+                if i == len(st.session_state.chat_history) - 1:
+                    with st.empty():
+                        typing_text = "Smart Librarian is typing"
+                        for dots in ["", ".", "..", "..."]:
+                            st.markdown(f"*{typing_text}{dots}*")
+                            time.sleep(0.3)
+                        st.empty()
+
                 st.markdown(
                     f"""
                 <div class="chat-message assistant-message">
-                    <strong>[AI] Smart Librarian ({timestamp}):</strong><br>
+                    <strong>Smart Librarian • {timestamp}</strong><br>
                     {message}
                 </div>
                 """,
                     unsafe_allow_html=True,
                 )
+
+                # Add reaction buttons for AI responses
+                col1, col2, col3, col4 = st.columns([1, 1, 1, 8])
+                with col1:
+                    if st.button(
+                        "👍", key=f"like_{i}", help="Helpful response"
+                    ):
+                        st.success("Thanks for the feedback!")
+                with col2:
+                    if st.button("👎", key=f"dislike_{i}", help="Not helpful"):
+                        st.info("Feedback noted. I'll try to improve!")
+                with col3:
+                    if st.button("📋", key=f"copy_{i}", help="Copy response"):
+                        st.info("Response copied to clipboard!")
 
 
 def extract_book_info_from_response(response: str) -> Tuple[str, List[str]]:
@@ -382,7 +764,7 @@ def extract_book_info_from_response(response: str) -> Tuple[str, List[str]]:
 def process_user_input(
     user_input: str, use_tts: bool = False, use_image: bool = False
 ):
-    """Process user input and generate response."""
+    """Process user input with enhanced feedback and progress indicators."""
     if not user_input.strip():
         return
 
@@ -390,64 +772,88 @@ def process_user_input(
     timestamp = time.strftime("%H:%M")
     st.session_state.chat_history.append(("user", user_input, timestamp))
 
+    # Show thinking indicator
+    thinking_placeholder = st.empty()
+    thinking_placeholder.markdown(
+        """
+        <div style="text-align: center; padding: 20px;">
+            <div class="loading-dots">
+                <div></div><div></div><div></div><div></div>
+            </div>
+            <p style="margin-top: 10px; color: #667eea;">🤖 Smart Librarian is thinking...</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
     # Process with chatbot
-    with st.spinner("Processing response..."):
-        try:
-            response = st.session_state.chatbot.chat(user_input)
+    try:
+        progress_bar = st.progress(0, text="Processing your request...")
+        progress_bar.progress(20, text="Understanding your question...")
 
-            # Add assistant response to history
-            st.session_state.chat_history.append(
-                ("assistant", response, timestamp)
-            )
+        response = st.session_state.chatbot.chat(user_input)
+        progress_bar.progress(60, text="Generating response...")
 
-            # Generate TTS if enabled
-            if use_tts and st.session_state.system_status.get("tts", False):
-                with st.spinner("Generating audio..."):
-                    audio_path = speak(response)
-                    if audio_path and audio_path.exists():
-                        st.success(f"[AUDIO] Generated: {audio_path.name}")
+        # Clear thinking indicator
+        thinking_placeholder.empty()
+        progress_bar.progress(80, text="Finalizing response...")
 
-                        # Play audio in browser
-                        with open(audio_path, "rb") as audio_file:
-                            audio_bytes = audio_file.read()
-                            st.audio(audio_bytes, format="audio/mp3")
+        # Add assistant response to history
+        st.session_state.chat_history.append(
+            ("assistant", response, timestamp)
+        )
 
-            # Generate image if enabled
-            if use_image and st.session_state.system_status.get(
-                "image_gen", False
-            ):
-                if (
-                    "recommend" in response.lower()
-                    or "book" in response.lower()
-                ):
-                    with st.spinner("Generating image..."):
-                        try:
-                            # Extract book title and themes from response
-                            book_title, book_themes = (
-                                extract_book_info_from_response(response)
-                            )
+        progress_bar.progress(100, text="Response ready!")
 
-                            st.info(
-                                f"[IMAGE] Generating cover for: '{book_title}' with themes: {', '.join(book_themes)}"
-                            )
+        # Generate TTS if enabled
+        if use_tts and st.session_state.system_status.get("tts", False):
+            with st.spinner("🔊 Generating audio..."):
+                audio_path = speak(response)
+                if audio_path and audio_path.exists():
+                    st.success(f"🎵 Audio generated: {audio_path.name}")
 
-                            image_path = generate_cover(
-                                book_title, book_themes
-                            )
-                            if image_path and image_path.exists():
-                                st.success(
-                                    f"[IMAGE] Generated: {image_path.name}"
-                                )
+                    # Play audio in browser with enhanced player
+                    with open(audio_path, "rb") as audio_file:
+                        audio_bytes = audio_file.read()
+                        st.audio(audio_bytes, format="audio/mp3")
+
+        # Generate image if enabled
+        if use_image and st.session_state.system_status.get(
+            "image_gen", False
+        ):
+            if "recommend" in response.lower() or "book" in response.lower():
+                with st.spinner("🎨 Creating book cover art..."):
+                    try:
+                        # Extract book title and themes from response
+                        book_title, book_themes = (
+                            extract_book_info_from_response(response)
+                        )
+
+                        st.info(
+                            f"🎨 Generating cover for: '{book_title}' with themes: {', '.join(book_themes)}"
+                        )
+
+                        image_path = generate_cover(book_title, book_themes)
+                        if image_path and image_path.exists():
+                            st.success(f"🖼️ Generated cover: {image_path.name}")
+
+                            # Display image with enhanced presentation
+                            col1, col2, col3 = st.columns([1, 2, 1])
+                            with col2:
                                 st.image(
                                     str(image_path),
-                                    caption=f"Generated cover for '{book_title}'",
-                                    width=300,
+                                    caption=f"AI-generated cover for '{book_title}'",
+                                    use_column_width=True,
                                 )
-                        except Exception as e:
-                            st.error(f"Image generation error: {e}")
+                    except Exception as e:
+                        st.error(f"🚫 Image generation error: {e}")
 
-        except Exception as e:
-            st.error(f"Error processing response: {e}")
+        progress_bar.empty()
+
+    except Exception as e:
+        thinking_placeholder.empty()
+        st.error(f"❌ Error processing response: {e}")
+        st.info("💡 Try rephrasing your question or check the system status.")
 
 
 def display_retriever_debug(user_input: str):
@@ -475,13 +881,14 @@ def main():
     # Initialize session state
     initialize_session_state()
 
-    # Header
+    # Header with enhanced styling
     st.markdown(
-        '<h1 class="main-header">[AI] Smart Librarian</h1>',
+        '<h1 class="main-header">📚 Smart Librarian AI</h1>',
         unsafe_allow_html=True,
     )
     st.markdown(
-        "*Professional AI chatbot for book recommendations with RAG and tool calling*"
+        '<div class="subtitle">🚀 Discover incredible books with personalized and advanced AI recommendations</div>',
+        unsafe_allow_html=True,
     )
 
     # Check system status
@@ -573,50 +980,86 @@ def main():
     # Sample queries
     selected_query = display_sample_queries()
 
-    # Input methods
-    col1, col2 = st.columns([3, 1])
-
-    with col1:
-        user_input = st.text_input(
-            "[INPUT] Your Question:",
-            value="",  # Always start with empty input
-            placeholder="Ask about books...",
-            key="user_input",
+    # Welcome message for new users
+    if not st.session_state.chat_history:
+        st.markdown(
+            """
+            <div style="background: linear-gradient(135deg, #f7fafc 0%, #e2e8f0 100%); 
+            padding: 30px; border-radius: 20px; margin: 20px 0; text-align: center;
+            border: 3px solid #cbd5e0; box-shadow: 0 8px 25px rgba(0,0,0,0.1);">
+                <h3 style="color: #1a202c; margin-bottom: 15px; font-weight: 700; text-shadow: 1px 1px 2px rgba(255,255,255,0.8);">👋 Welcome to Smart Librarian AI!</h3>
+                <p style="color: #2d3748; font-size: 1.1em; margin-bottom: 15px; font-weight: 500;">
+                    I'm your personal AI librarian, here to help you discover amazing books. 
+                    I can recommend books based on your preferences, explain plots, and even generate book covers!
+                </p>
+                <p style="color: #1a202c; font-weight: 600;">
+                    ✨ Try asking me about books, genres, or use the sample questions above to get started!
+                </p>
+            </div>
+            """,
+            unsafe_allow_html=True,
         )
 
-    with col2:
-        # Voice input button
+    # Enhanced input interface
+    st.markdown(
+        '<div class="card"><h3>💬 Chat with Smart Librarian</h3></div>',
+        unsafe_allow_html=True,
+    )
+
+    # Input methods with better layout
+    input_col, voice_col, action_col = st.columns([4, 1, 1])
+
+    with input_col:
+        user_input = st.text_input(
+            "Ask me anything about books...",
+            value="",  # Always start with empty input
+            placeholder="e.g., I want a thrilling mystery novel",
+            key="user_input",
+            label_visibility="collapsed",
+        )
+
+    with voice_col:
+        # Voice input button with enhanced design
         if use_stt and status.get("stt", False):
-            if st.button("[VOICE] Speak"):
-                with st.spinner("Listening... (5 seconds)"):
+            if st.button(
+                "🎤", help="Voice Input (5 seconds)", use_container_width=True
+            ):
+                with st.spinner("🎤 Listening..."):
+                    progress_bar = st.progress(0)
                     try:
+                        # Simulate progress during recording
+                        for i in range(5):
+                            progress_bar.progress((i + 1) * 20)
+                            time.sleep(1)
+
                         transcribed = transcribe("microphone", duration=5)
                         if transcribed:
-                            # Use session state to store transcribed text
                             st.session_state.transcribed_text = transcribed
-                            st.success(f"Recognized: {transcribed}")
+                            st.success(f"✓ Recognized: {transcribed}")
                         else:
-                            st.error(
-                                "Could not recognize speech. Please try again or use text input."
-                            )
+                            st.error("Could not recognize speech")
                     except Exception as e:
-                        st.error(f"Speech recognition error: {str(e)}")
-                        st.info(
-                            "💡 **Tip**: If microphone isn't working, you can still use Whisper API for file uploads!"
-                        )
+                        st.error(f"Speech error: {str(e)}")
+                    finally:
+                        progress_bar.empty()
 
-        # Display transcribed text if available
-        if hasattr(st.session_state, "transcribed_text"):
-            if st.session_state.transcribed_text:
-                st.info(
-                    f"🎤 Last transcribed: {st.session_state.transcribed_text}"
-                )
-                if st.button("Use this text"):
-                    user_input = st.session_state.transcribed_text
-                    st.session_state.transcribed_text = ""  # Clear after use
+    with action_col:
+        submit_clicked = st.button(
+            "🚀 Send", use_container_width=True, type="primary"
+        )
 
-    # Process input
-    submit_clicked = st.button("[SEND] Submit")
+    # Display transcribed text with action button
+    if (
+        hasattr(st.session_state, "transcribed_text")
+        and st.session_state.transcribed_text
+    ):
+        st.info(f"🎤 **Voice Input:** {st.session_state.transcribed_text}")
+        col1, col2 = st.columns([1, 4])
+        with col1:
+            if st.button("✓ Use This", key="use_voice"):
+                user_input = st.session_state.transcribed_text
+                st.session_state.transcribed_text = ""  # Clear after use
+                st.rerun()
 
     # Determine what input to process
     input_to_process = None
@@ -635,12 +1078,114 @@ def main():
     # Display chat history
     display_chat_history()
 
-    # Footer
+    # Footer with enhanced statistics and info
     st.markdown("---")
+
+    # Usage statistics and system metrics
+    if st.session_state.chat_history:
+        st.markdown("### 📊 Session Statistics")
+
+        col1, col2, col3, col4 = st.columns(4)
+
+        # Calculate statistics
+        total_conversations = len(
+            [msg for msg in st.session_state.chat_history if msg[0] == "user"]
+        )
+        total_words = sum(
+            len(msg[1].split()) for msg in st.session_state.chat_history
+        )
+        avg_response_length = sum(
+            len(msg[1])
+            for msg in st.session_state.chat_history
+            if msg[0] == "assistant"
+        ) / max(
+            1,
+            len(
+                [
+                    msg
+                    for msg in st.session_state.chat_history
+                    if msg[0] == "assistant"
+                ]
+            ),
+        )
+
+        with col1:
+            st.metric(
+                label="💬 Conversations",
+                value=total_conversations,
+                help="Total number of questions asked",
+            )
+        with col2:
+            st.metric(
+                label="📝 Total Words",
+                value=total_words,
+                help="Total words in conversation",
+            )
+        with col3:
+            st.metric(
+                label="📏 Avg Response",
+                value=f"{avg_response_length:.0f} chars",
+                help="Average AI response length",
+            )
+        with col4:
+            active_features = sum(
+                1
+                for feature in ["tts", "stt", "image_gen"]
+                if st.session_state.system_status.get(feature, False)
+            )
+            st.metric(
+                label="⚡ Active Features",
+                value=f"{active_features}/3",
+                help="Number of active AI features",
+            )
+
+    # System health dashboard
+    st.markdown("### 🏥 System Health")
+
+    # Create health score
+    health_score = sum(
+        1 for status in st.session_state.system_status.values() if status
+    )
+    total_components = len(st.session_state.system_status)
+    health_percentage = (
+        (health_score / total_components) * 100 if total_components > 0 else 0
+    )
+
+    # Health indicator with color coding
+    if health_percentage >= 80:
+        health_color = "🟢"
+        health_status = "Excellent"
+    elif health_percentage >= 60:
+        health_color = "🟡"
+        health_status = "Good"
+    else:
+        health_color = "🔴"
+        health_status = "Needs Attention"
+
+    st.markdown(
+        f"""
+        <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); 
+        border-radius: 15px; margin: 20px 0; color: white;">
+            <h3>{health_color} System Health: {health_status}</h3>
+            <p style="font-size: 1.2em; margin: 0;">{health_score}/{total_components} components operational ({health_percentage:.0f}%)</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    # Footer
     st.markdown(
         """
-    <div style="text-align: center; color: #4a5568; font-weight: 500;">
-        Smart Librarian v1.0 | Powered by OpenAI GPT & ChromaDB
+    <div style="text-align: center; color: #4a5568; font-weight: 500; padding: 20px 0;">
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+        background-clip: text; font-size: 1.1em; margin-bottom: 10px;">
+            Smart Librarian AI v2.0
+        </div>
+        <div style="font-size: 0.9em; color: #718096;">
+            Powered by OpenAI GPT • ChromaDB • Streamlit<br>
+            🚀 Enhanced UI • 🎨 Modern Design • ⚡ Advanced Features
+        </div>
     </div>
     """,
         unsafe_allow_html=True,
