@@ -27,24 +27,24 @@ const ToggleSetting: React.FC<ToggleSettingProps> = ({
   return (
     <div
       className={cn(
-        'flex items-center justify-between p-3 rounded-lg border transition-all duration-200',
+        'flex items-center justify-between p-2 rounded-lg border transition-all duration-200',
         available
           ? 'border-gray-200 hover:bg-accent/50'
           : 'border-gray-200 bg-muted/30 opacity-60'
       )}
     >
-      <div className="flex items-center gap-3 flex-1">
+      <div className="flex items-center gap-2 flex-1">
         <div
           className={cn(
-            'p-2 rounded-md',
+            'p-1.5 rounded-md',
             available ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground'
           )}
         >
           {icon}
         </div>
         <div className="flex-1">
-          <h4 className="text-sm font-medium">{title}</h4>
-          <p className="text-xs text-muted-foreground">{description}</p>
+          <h4 className="text-xs font-medium">{title}</h4>
+          <p className="text-xs text-muted-foreground leading-tight">{description}</p>
         </div>
       </div>
       <label className="relative inline-flex items-center cursor-pointer">
@@ -57,7 +57,7 @@ const ToggleSetting: React.FC<ToggleSettingProps> = ({
         />
         <div
           className={cn(
-            'w-11 h-6 rounded-full transition-colors duration-200',
+            'w-9 h-5 rounded-full transition-colors duration-200',
             enabled && available
               ? 'bg-primary'
               : 'bg-gray-200 dark:bg-gray-700'
@@ -65,8 +65,8 @@ const ToggleSetting: React.FC<ToggleSettingProps> = ({
         >
           <div
             className={cn(
-              'dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-200',
-              enabled && available ? 'transform translate-x-5' : ''
+              'dot absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full transition-transform duration-200',
+              enabled && available ? 'transform translate-x-4' : ''
             )}
           />
         </div>
@@ -146,16 +146,16 @@ export const SettingsPanel: React.FC = () => {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Settings className="w-5 h-5" />
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center gap-2 text-base">
+          <Settings className="w-4 h-4" />
           Settings
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4">
         {/* Feature toggles */}
-        <div className="space-y-3">
-          <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+        <div className="space-y-2">
+          <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
             Features
           </h4>
           {settings.map((setting) => (
@@ -172,8 +172,8 @@ export const SettingsPanel: React.FC = () => {
         </div>
 
         {/* Actions */}
-        <div className="space-y-3">
-          <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+        <div className="space-y-2">
+          <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
             Actions
           </h4>
           
@@ -181,27 +181,27 @@ export const SettingsPanel: React.FC = () => {
             variant="outline"
             onClick={handleClearHistory}
             disabled={clearHistory.isPending}
-            className="w-full justify-start"
+            className="w-full justify-start h-8 text-xs"
           >
-            <Trash2 className="w-4 h-4 mr-2" />
+            <Trash2 className="w-3 h-3 mr-2" />
             Clear Chat History
           </Button>
 
           <Button
             variant="outline"
             onClick={handleExportChat}
-            className="w-full justify-start"
+            className="w-full justify-start h-8 text-xs"
           >
-            <Settings className="w-4 h-4 mr-2" />
+            <Settings className="w-3 h-3 mr-2" />
             Export Chat
           </Button>
         </div>
 
         {/* Info */}
-        <div className="text-xs text-muted-foreground space-y-1">
-          <p>• Features require backend services to be running</p>
-          <p>• Debug mode shows additional technical information</p>
-          <p>• Settings are saved locally in your browser</p>
+        <div className="text-xs text-muted-foreground space-y-1 leading-tight">
+          <p>• Features require backend services</p>
+          <p>• Debug mode shows technical info</p>
+          <p>• Settings saved locally</p>
         </div>
       </CardContent>
     </Card>

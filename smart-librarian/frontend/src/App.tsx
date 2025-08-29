@@ -58,7 +58,7 @@ const AppContent: React.FC = () => {
   }, [sidebarOpen]);
 
   return (
-    <div className="min-h-screen flex">
+    <div className="h-screen flex overflow-hidden">
       {/* Sidebar */}
       <div
         id="sidebar"
@@ -69,7 +69,7 @@ const AppContent: React.FC = () => {
       >
         <div className="flex flex-col h-full">
           {/* Sidebar Header */}
-          <div className="flex items-center justify-between p-4 border-b border-white/10">
+          <div className="flex items-center justify-between p-3 border-b border-white/10 flex-shrink-0">
             <h2 className="text-lg font-semibold gradient-text">Smart Librarian</h2>
             <Button
               variant="ghost"
@@ -82,7 +82,7 @@ const AppContent: React.FC = () => {
           </div>
 
           {/* Sidebar Content */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-6">
+          <div className="flex-1 overflow-y-auto p-3 space-y-4">
             <SystemStatus />
             <SettingsPanel />
           </div>
@@ -90,11 +90,11 @@ const AppContent: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 h-full">
         {/* Header */}
-        <header className="header-glass p-4">
+        <header className="header-glass p-3 flex-shrink-0">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <Button
                 variant="ghost"
                 size="icon"
@@ -105,14 +105,14 @@ const AppContent: React.FC = () => {
               </Button>
               
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center floating-element glow-effect">
-                  <BookOpen className="w-6 h-6 text-white" />
+                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center floating-element glow-effect">
+                  <BookOpen className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-bold gradient-text">
+                  <h1 className="text-2xl font-bold gradient-text">
                     Smart Librarian AI
                   </h1>
-                  <p className="text-sm text-gray-300">
+                  <p className="text-xs text-gray-300">
                     Discover incredible books with personalized AI recommendations
                   </p>
                 </div>
@@ -120,28 +120,30 @@ const AppContent: React.FC = () => {
             </div>
 
             {/* Status Indicator */}
-            <div className="hidden sm:flex items-center gap-2 glass-card px-3 py-2 rounded-full">
+            <div className="hidden sm:flex items-center gap-2 glass-card px-3 py-1 rounded-full">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-sm text-gray-300">Online</span>
+              <span className="text-xs text-gray-300">Online</span>
             </div>
           </div>
         </header>
 
         {/* Main Chat Area */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full">
+          <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full h-full">
             {/* Sample Queries - Show only when no messages */}
             {messages.length === 0 && (
-              <div className="p-4">
+              <div className="p-3 flex-shrink-0">
                 <SampleQueries onQuerySelect={handleSampleQuery} />
               </div>
             )}
 
             {/* Chat History */}
-            <ChatHistory />
+            <div className="flex-1 overflow-hidden">
+              <ChatHistory />
+            </div>
 
             {/* Chat Input */}
-            <div className="p-4 header-glass">
+            <div className="p-3 header-glass flex-shrink-0">
               <ChatInput disabled={sendMessage.isPending} />
             </div>
           </div>

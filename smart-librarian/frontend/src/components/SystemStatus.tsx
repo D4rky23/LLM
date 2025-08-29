@@ -23,7 +23,7 @@ const StatusCard: React.FC<StatusCardProps> = ({
   return (
     <div
       className={cn(
-        'flex items-center gap-3 p-3 rounded-lg border-l-4 transition-all duration-200',
+        'flex items-center gap-2 p-2 rounded-lg border-l-2 transition-all duration-200',
         status
           ? 'border-l-green-500 bg-green-50 dark:bg-green-900/20'
           : 'border-l-red-500 bg-red-50 dark:bg-red-900/20'
@@ -38,10 +38,10 @@ const StatusCard: React.FC<StatusCardProps> = ({
         {icon}
       </div>
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <span
             className={cn(
-              'text-sm font-medium',
+              'text-xs font-medium',
               status ? 'text-green-800 dark:text-green-200' : 'text-red-800 dark:text-red-200'
             )}
           >
@@ -50,7 +50,7 @@ const StatusCard: React.FC<StatusCardProps> = ({
         </div>
         <p
           className={cn(
-            'text-xs mt-1',
+            'text-xs mt-0.5 leading-tight',
             status
               ? 'text-green-600 dark:text-green-300'
               : 'text-red-600 dark:text-red-300'
@@ -69,14 +69,14 @@ export const SystemStatus: React.FC = () => {
   if (isLoading) {
     return (
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Settings className="w-5 h-5" />
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Settings className="w-4 h-4" />
             System Status
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center py-8">
+          <div className="flex items-center justify-center py-4">
             <LoadingSpinner size="md" />
           </div>
         </CardContent>
@@ -87,16 +87,16 @@ export const SystemStatus: React.FC = () => {
   if (error) {
     return (
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Settings className="w-5 h-5" />
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Settings className="w-4 h-4" />
             System Status
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8 text-red-600">
-            <p>Failed to load system status</p>
-            <p className="text-sm text-muted-foreground mt-1">
+          <div className="text-center py-4 text-red-600">
+            <p className="text-sm">Failed to load system status</p>
+            <p className="text-xs text-muted-foreground mt-1">
               {error.message}
             </p>
           </div>
@@ -172,15 +172,15 @@ export const SystemStatus: React.FC = () => {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Settings className="w-5 h-5" />
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Settings className="w-4 h-4" />
             System Status
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent className="space-y-2">
           {components.map((component) => (
             <StatusCard
               key={component.key}
@@ -196,17 +196,17 @@ export const SystemStatus: React.FC = () => {
 
       {/* Health Summary */}
       <Card>
-        <CardContent className="p-6">
+        <CardContent className="p-4">
           <div className="text-center">
-            <div className="mb-2">
-              <span className="text-2xl">
+            <div className="mb-1">
+              <span className="text-xl">
                 {healthPercentage >= 80 ? '🟢' : healthPercentage >= 60 ? '🟡' : '🔴'}
               </span>
             </div>
-            <h3 className={cn('text-lg font-semibold', healthColor)}>
+            <h3 className={cn('text-sm font-semibold', healthColor)}>
               System Health: {healthStatus}
             </h3>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               {healthScore}/{totalComponents} components operational ({healthPercentage.toFixed(0)}%)
             </p>
           </div>
