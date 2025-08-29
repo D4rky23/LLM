@@ -201,17 +201,17 @@ export const ChatHistory: React.FC = () => {
           <div className="absolute top-1/2 right-1/3 w-20 h-20 bg-pink-500/10 rounded-full filter blur-xl animate-pulse delay-500" />
         </div>
 
-        <div className="text-center max-w-2xl mx-auto relative z-10 pt-4 pb-16">
+        <div className="text-center max-w-2xl mx-auto relative z-10 py-2">
           {/* Animated Bot Avatar */}
           <div className="relative mb-4 group">
-            <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center floating-element glow-effect transition-all duration-500 group-hover:scale-110">
-              <Bot className="w-8 h-8 text-white transition-transform duration-300 group-hover:rotate-12" />
+            <div className="w-12 h-12 mx-auto rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center floating-element glow-effect transition-all duration-500 group-hover:scale-110">
+              <Bot className="w-6 h-6 text-white transition-transform duration-300 group-hover:rotate-12" />
             </div>
             
             {/* Orbit rings */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-20 h-20 border-2 border-blue-400/30 rounded-full animate-spin opacity-50" style={{animationDuration: '8s'}} />
-              <div className="absolute w-24 h-24 border border-purple-400/20 rounded-full animate-spin opacity-30" style={{animationDuration: '12s', animationDirection: 'reverse'}} />
+              <div className="w-16 h-16 border-2 border-blue-400/30 rounded-full animate-spin opacity-50" style={{animationDuration: '8s'}} />
+              <div className="absolute w-20 h-20 border border-purple-400/20 rounded-full animate-spin opacity-30" style={{animationDuration: '12s', animationDirection: 'reverse'}} />
             </div>
             
             {/* Pulsing dots */}
@@ -223,7 +223,7 @@ export const ChatHistory: React.FC = () => {
           </div>
 
           {/* Typed Text Animation */}
-          <div className="mb-4">
+          <div className="mb-2">
             <h3 className="text-xl font-bold mb-2 gradient-text">
               {typedText.includes('Welcome') ? typedText.split('I\'m')[0] : ''}
             </h3>
@@ -246,7 +246,7 @@ export const ChatHistory: React.FC = () => {
 
           {/* Features Grid */}
           {showFeatures && (
-            <div className="mb-4 fade-in-scale">
+            <div className="mb-2 fade-in-scale">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {features.map((feature, index) => {
                   const IconComponent = feature.icon;
@@ -276,7 +276,7 @@ export const ChatHistory: React.FC = () => {
 
           {/* Interactive Stats */}
           {showFeatures && (
-            <div className="glass-card p-3 rounded-lg border border-white/10 slide-up mb-3">
+            <div className="glass-card p-2 rounded-lg border border-white/10 slide-up mb-2">
               <div className="grid grid-cols-3 gap-3 text-center">
                 <div className="group cursor-pointer">
                   <div className="text-lg font-bold gradient-text mb-1 group-hover:scale-110 transition-transform">
@@ -302,7 +302,7 @@ export const ChatHistory: React.FC = () => {
 
           {/* Enhanced CTA */}
           {showFeatures && (
-            <div className="glass-card p-3 rounded-lg border border-white/10 slide-up mb-6">
+            <div className="glass-card p-2 rounded-lg border border-white/10 slide-up mb-2">
               <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
                 <Sparkles className="w-4 h-4 animate-pulse text-purple-400" />
                 <span>

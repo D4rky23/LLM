@@ -301,18 +301,18 @@ const AppContent: React.FC = () => {
           <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full h-full">
             {/* Sample Queries - Show only when no messages */}
             {messages.length === 0 && (
-              <div className="p-3 flex-shrink-0">
+              <div className="p-2 flex-shrink-0">
                 <SampleQueries onQuerySelect={handleSampleQuery} />
               </div>
             )}
 
             {/* Chat History */}
-            <div className="flex-1 overflow-hidden">
+            <div className="flex-1 overflow-hidden min-h-0">
               <ChatHistory />
             </div>
 
             {/* Chat Input */}
-            <div className="p-3 header-glass flex-shrink-0">
+            <div className="p-2 header-glass flex-shrink-0">
               <ChatInput disabled={sendMessage.isPending} />
             </div>
           </div>

@@ -91,11 +91,11 @@ export const SampleQueries: React.FC<SampleQueriesProps> = ({ onQuerySelect }) =
         ))}
       </div>
 
-            <div className="glass-card border border-white/20 rounded-lg p-3 backdrop-blur-lg">
+            <div className="glass-card border border-white/20 rounded-lg p-2 backdrop-blur-lg">
         {/* Animated header background */}
         <div className="absolute top-0 left-0 right-0 h-20 bg-gradient-to-r from-orange-500/20 via-yellow-500/20 to-orange-500/20 opacity-0 group-hover:opacity-100 transition-all duration-500" />
         
-        <div className="p-4 border-b border-white/10 relative z-10">
+        <div className="p-2 border-b border-white/10 relative z-10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="relative">
@@ -117,8 +117,8 @@ export const SampleQueries: React.FC<SampleQueriesProps> = ({ onQuerySelect }) =
           </div>
         </div>
         
-        <div className="p-4 relative z-10">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+        <div className="p-2 relative z-10">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2">
             {sampleQueries.map((sample, index) => {
               const IconComponent = sample.icon;
               const isHovered = hoveredCard === sample.category;
@@ -127,7 +127,7 @@ export const SampleQueries: React.FC<SampleQueriesProps> = ({ onQuerySelect }) =
                 <button
                   key={index}
                   className={cn(
-                    "relative h-auto p-4 text-left rounded-2xl group overflow-hidden transition-all duration-500 transform",
+                    "relative h-auto p-3 text-left rounded-2xl group overflow-hidden transition-all duration-500 transform",
                     "bg-gradient-to-br from-white/5 to-white/10 border border-white/20",
                     "hover:scale-[1.02] hover:shadow-2xl",
                     isHovered ? "shadow-2xl scale-[1.02]" : "",
@@ -153,7 +153,7 @@ export const SampleQueries: React.FC<SampleQueriesProps> = ({ onQuerySelect }) =
                   
                   <div className="relative z-10">
                     {/* Header with icons */}
-                    <div className="flex items-center gap-3 mb-3">
+                    <div className="flex items-center gap-3 mb-2">
                       <div className="relative">
                         <div className={cn(
                           "text-3xl group-hover:scale-125 transition-all duration-300 floating-element",
@@ -178,7 +178,7 @@ export const SampleQueries: React.FC<SampleQueriesProps> = ({ onQuerySelect }) =
                     </div>
                     
                     {/* Main query text */}
-                    <div className="text-sm leading-relaxed text-gray-300 group-hover:text-white transition-colors duration-300 mb-3">
+                    <div className="text-sm leading-relaxed text-gray-300 group-hover:text-white transition-colors duration-300 mb-2">
                       {sample.query}
                     </div>
                     
@@ -217,7 +217,7 @@ export const SampleQueries: React.FC<SampleQueriesProps> = ({ onQuerySelect }) =
           </div>
           
           {/* Footer with tips */}
-          <div className="mt-3 p-2 bg-black/20 rounded-lg border border-white/10">
+          <div className="mt-2 p-2 bg-black/20 rounded-lg border border-white/10">
             <div className="flex items-center gap-2 text-xs text-gray-400">
               <Sparkles className="w-3 h-3 animate-pulse" />
               <span>
