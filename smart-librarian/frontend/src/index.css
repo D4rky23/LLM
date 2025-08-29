@@ -69,14 +69,16 @@
     height: 100%;
   }
   
-  /* Hide scrollbars globally while maintaining functionality */
+  /* Hide scrollbars completely while maintaining functionality */
   * {
-    scrollbar-width: thin; /* Firefox - keep thin scrollbar */
+    scrollbar-width: none; /* Firefox - hide scrollbar */
     -ms-overflow-style: none; /* Internet Explorer 10+ */
   }
   
   *::-webkit-scrollbar {
-    width: 4px; /* Chrome, Safari, Edge - thin scrollbar */
+    width: 0px; /* Chrome, Safari, Edge - hide scrollbar completely */
+    height: 0px; /* Hide horizontal scrollbar too */
+    display: none; /* Ensure it's completely hidden */
   }
   
   *::-webkit-scrollbar-track {
@@ -84,12 +86,11 @@
   }
   
   *::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 2px;
+    background: transparent;
   }
   
   *::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: transparent;
   }
   body {
     background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #2d1b69 100%);
