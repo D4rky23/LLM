@@ -135,7 +135,6 @@ const AppContent: React.FC = () => {
                 <h3 className="text-xs font-medium text-gray-300 group-hover:text-white transition-colors">
                   Quick Stats
                 </h3>
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
@@ -265,10 +264,6 @@ const AppContent: React.FC = () => {
               
               {/* AI Status */}
               <div className="flex items-center gap-2 glass-card px-3 py-1.5 rounded-full group hover:shadow-lg transition-all duration-300">
-                <div className="relative">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                  <div className="absolute inset-0 w-2 h-2 bg-green-400 rounded-full animate-ping opacity-30" />
-                </div>
                 <span className="text-xs text-gray-300 group-hover:text-white transition-colors font-medium">AI Online</span>
                 
                 {/* Performance indicator */}

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Send, Mic, Upload, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Send, Mic, Upload, X, Sparkles, BookOpen, Coffee, Star, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
@@ -17,8 +17,18 @@ export const ChatInput: React.FC<ChatInputProps> = ({ disabled = false }) => {
   const [isRecording, setIsRecording] = useState(false);
   const [transcribedText, setTranscribedText] = useState('');
   const [dragActive, setDragActive] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   const { useTTS, useImageGeneration, useSTT } = useSettingsStore();
+  
+  const quickSuggestions = [
+    { icon: BookOpen, text: "Recommend a fantasy book", color: "text-purple-400" },
+    { icon: Star, text: "Best sci-fi novels", color: "text-blue-400" },
+    { icon: Coffee, text: "Cozy mystery books", color: "text-orange-400" },
+    { icon: Sparkles, text: "Generate book cover", color: "text-pink-400" },
+    { icon: Zap, text: "Book plot summary", color: "text-yellow-400" }
+  ];
   const sendMessage = useSendMessage();
   const transcribeFile = useTranscribeFile();
   const transcribeMicrophone = useTranscribeMicrophone();
@@ -104,7 +114,42 @@ export const ChatInput: React.FC<ChatInputProps> = ({ disabled = false }) => {
   const isLoading = sendMessage.isPending || transcribeFile.isPending || isRecording;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 relative">
+      {/* Quick Suggestions Panel */}
+      {(showSuggestions || isFocused) && message.length === 0 && (
+        <div className="absolute bottom-full left-0 right-0 mb-2 fade-in-scale">
+          <div className="glass-card p-3 rounded-xl border border-white/10 backdrop-blur-lg">
+            <div className="text-xs text-gray-400 mb-2 flex items-center gap-2">
+              <Sparkles className="w-3 h-3" />
+              Quick suggestions
+            </div>
+            <div className="grid grid-cols-1 gap-2">
+              {quickSuggestions.map((suggestion, index) => {
+                const IconComponent = suggestion.icon;
+                return (
+                  <button
+                    key={index}
+                    onClick={() => {
+                      setMessage(suggestion.text);
+                      setShowSuggestions(false);
+                    }}
+                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-all duration-200 group text-left"
+                  >
+                    <IconComponent className={cn("w-4 h-4", suggestion.color)} />
+                    <span className="text-sm text-gray-300 group-hover:text-white transition-colors">
+                      {suggestion.text}
+                    </span>
+                    <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="w-1 h-1 bg-blue-400 rounded-full" />
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* Transcribed text display */}
       {transcribedText && (
         <div className="glass-card border border-blue-500/30 rounded-xl">
@@ -147,6 +192,14 @@ export const ChatInput: React.FC<ChatInputProps> = ({ disabled = false }) => {
               <Input
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
+                onFocus={() => {
+                  setIsFocused(true);
+                  setShowSuggestions(true);
+                }}
+                onBlur={() => {
+                  setIsFocused(false);
+                  setTimeout(() => setShowSuggestions(false), 200);
+                }}
                 placeholder={
                   transcribedText
                     ? 'Voice input ready - click send or type to edit'

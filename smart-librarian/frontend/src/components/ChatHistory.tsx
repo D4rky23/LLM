@@ -1,5 +1,5 @@
-import React from 'react';
-import { User, Bot, Volume2, Image as ImageIcon, Clock } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { User, Bot, Volume2, Image as ImageIcon, Clock, Sparkles, BookOpen, Zap, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useChatMessages } from '@/stores';
 import { formatTimestamp } from '@/lib/utils';
@@ -140,24 +140,189 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
 
 export const ChatHistory: React.FC = () => {
   const messages = useChatMessages();
+  const [typedText, setTypedText] = useState('');
+  const [showFeatures, setShowFeatures] = useState(false);
+  
+  const welcomeTexts = [
+    "Welcome to Smart Librarian AI!",
+    "I'm your personal AI librarian, here to help you discover amazing books.",
+    "I can recommend books based on your preferences, explain plots, and even generate book covers!"
+  ];
+  
+  const features = [
+    { icon: BookOpen, text: "Smart Recommendations", color: "text-blue-400" },
+    { icon: Heart, text: "Personalized for You", color: "text-pink-400" },
+    { icon: Zap, text: "Lightning Fast", color: "text-yellow-400" },
+    { icon: Sparkles, text: "AI-Generated Covers", color: "text-purple-400" }
+  ];
+
+  useEffect(() => {
+    if (messages.length === 0) {
+      const fullText = welcomeTexts.join(' ');
+      let currentIndex = 0;
+      
+      const typingInterval = setInterval(() => {
+        if (currentIndex <= fullText.length) {
+          setTypedText(fullText.slice(0, currentIndex));
+          currentIndex++;
+        } else {
+          clearInterval(typingInterval);
+          setTimeout(() => setShowFeatures(true), 500);
+        }
+      }, 50);
+
+      return () => clearInterval(typingInterval);
+    }
+  }, [messages.length]);
 
   if (messages.length === 0) {
     return (
-      <div className="flex-1 flex items-center justify-center p-3">
-        <div className="text-center max-w-md mx-auto">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center floating-element glow-effect">
-            <Bot className="w-8 h-8 text-white" />
+      <div className="flex-1 flex items-start justify-center p-3 relative overflow-hidden overflow-y-auto">
+        {/* Animated background particles */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-blue-400/20 rounded-full animate-pulse"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${i * 0.3}s`,
+                animationDuration: `${3 + Math.random() * 4}s`
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Floating orbs */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-blue-500/10 rounded-full filter blur-3xl animate-pulse" />
+          <div className="absolute top-3/4 right-1/4 w-24 h-24 bg-purple-500/10 rounded-full filter blur-2xl animate-pulse delay-1000" />
+          <div className="absolute top-1/2 right-1/3 w-20 h-20 bg-pink-500/10 rounded-full filter blur-xl animate-pulse delay-500" />
+        </div>
+
+        <div className="text-center max-w-2xl mx-auto relative z-10 pt-4 pb-16">
+          {/* Animated Bot Avatar */}
+          <div className="relative mb-4 group">
+            <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center floating-element glow-effect transition-all duration-500 group-hover:scale-110">
+              <Bot className="w-8 h-8 text-white transition-transform duration-300 group-hover:rotate-12" />
+            </div>
+            
+            {/* Orbit rings */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-20 h-20 border-2 border-blue-400/30 rounded-full animate-spin opacity-50" style={{animationDuration: '8s'}} />
+              <div className="absolute w-24 h-24 border border-purple-400/20 rounded-full animate-spin opacity-30" style={{animationDuration: '12s', animationDirection: 'reverse'}} />
+            </div>
+            
+            {/* Pulsing dots */}
+            <div className="absolute -top-1 -right-1">
+              <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse">
+                <div className="w-3 h-3 bg-green-400 rounded-full animate-ping opacity-30" />
+              </div>
+            </div>
           </div>
-          <h3 className="text-xl font-bold mb-2 gradient-text">Welcome to Smart Librarian AI!</h3>
-          <p className="text-gray-300 mb-4 leading-relaxed text-sm">
-            I'm your personal AI librarian, here to help you discover amazing books. 
-            I can recommend books based on your preferences, explain plots, and even generate book covers!
-          </p>
-          <div className="glass-card p-3 rounded-xl border border-white/10">
-            <p className="text-xs text-gray-400">
-              ✨ Try asking me about books, genres, or use the sample questions to get started!
-            </p>
+
+          {/* Typed Text Animation */}
+          <div className="mb-4">
+            <h3 className="text-xl font-bold mb-2 gradient-text">
+              {typedText.includes('Welcome') ? typedText.split('I\'m')[0] : ''}
+            </h3>
+            {typedText.includes('I\'m') && (
+              <p className="text-gray-300 leading-relaxed text-sm mb-3">
+                {typedText.split('I\'m')[1]?.split('I can')[0] ? `I'm${typedText.split('I\'m')[1].split('I can')[0]}` : ''}
+              </p>
+            )}
+            {typedText.includes('I can') && (
+              <p className="text-gray-400 leading-relaxed text-xs">
+                {typedText.includes('I can') ? `I can${typedText.split('I can')[1]}` : ''}
+              </p>
+            )}
+            
+            {/* Typing cursor */}
+            {typedText.length < welcomeTexts.join(' ').length && (
+              <span className="inline-block w-0.5 h-4 bg-blue-400 animate-pulse ml-1" />
+            )}
           </div>
+
+          {/* Features Grid */}
+          {showFeatures && (
+            <div className="mb-4 fade-in-scale">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {features.map((feature, index) => {
+                  const IconComponent = feature.icon;
+                  return (
+                    <div
+                      key={index}
+                      className="glass-card p-2 rounded-lg border border-white/10 hover:border-white/20 transition-all duration-300 group cursor-pointer"
+                      style={{
+                        animationDelay: `${index * 150}ms`
+                      }}
+                    >
+                      <div className="text-center">
+                        <IconComponent className={cn(
+                          "w-5 h-5 mx-auto mb-1 transition-all duration-300 group-hover:scale-125",
+                          feature.color
+                        )} />
+                        <span className="text-xs text-gray-400 group-hover:text-white transition-colors">
+                          {feature.text}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Interactive Stats */}
+          {showFeatures && (
+            <div className="glass-card p-3 rounded-lg border border-white/10 slide-up mb-3">
+              <div className="grid grid-cols-3 gap-3 text-center">
+                <div className="group cursor-pointer">
+                  <div className="text-lg font-bold gradient-text mb-1 group-hover:scale-110 transition-transform">
+                    {Math.floor(Math.random() * 5000) + 10000}+
+                  </div>
+                  <div className="text-xs text-gray-400 group-hover:text-white transition-colors">Books</div>
+                </div>
+                <div className="group cursor-pointer">
+                  <div className="text-lg font-bold text-green-400 mb-1 group-hover:scale-110 transition-transform">
+                    {Math.floor(Math.random() * 100) + 200}+
+                  </div>
+                  <div className="text-xs text-gray-400 group-hover:text-white transition-colors">Readers</div>
+                </div>
+                <div className="group cursor-pointer">
+                  <div className="text-lg font-bold text-purple-400 mb-1 group-hover:scale-110 transition-transform">
+                    {Math.floor(Math.random() * 50) + 150}ms
+                  </div>
+                  <div className="text-xs text-gray-400 group-hover:text-white transition-colors">Response</div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Enhanced CTA */}
+          {showFeatures && (
+            <div className="glass-card p-3 rounded-lg border border-white/10 slide-up mb-6">
+              <div className="flex items-center justify-center gap-2 text-sm text-gray-400">
+                <Sparkles className="w-4 h-4 animate-pulse text-purple-400" />
+                <span>
+                  ✨ <strong className="text-white">Ready to explore?</strong> Try the sample questions above!
+                </span>
+              </div>
+              
+              {/* Quick action buttons */}
+              <div className="flex flex-wrap justify-center gap-2 mt-2">
+                {['Fantasy', 'Sci-Fi', 'Romance', 'Mystery'].map((genre, index) => (
+                  <button
+                    key={index}
+                    className="px-2 py-1 text-xs bg-white/5 border border-white/20 rounded-full hover:bg-white/10 hover:border-white/30 transition-all duration-200 hover:scale-105"
+                  >
+                    {genre}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );
