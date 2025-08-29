@@ -307,13 +307,13 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({ bookStats, metrics }) 
                 </div>
                 <div className="group cursor-pointer">
                   <div className="text-lg font-bold text-green-400 mb-1 group-hover:scale-110 transition-transform">
-                    {totalReaders}
+                    1
                   </div>
-                  <div className="text-xs text-gray-400 group-hover:text-white transition-colors">Readers</div>
+                  <div className="text-xs text-gray-400 group-hover:text-white transition-colors">Reader{totalReaders !== 1 ? 's' : ''}</div>
                 </div>
                 <div className="group cursor-pointer">
                   <div className="text-lg font-bold text-purple-400 mb-1 group-hover:scale-110 transition-transform">
-                    {responseTime || 150}ms
+                    {responseTime > 0 ? `${responseTime}ms` : 'N/A'}
                   </div>
                   <div className="text-xs text-gray-400 group-hover:text-white transition-colors">Response</div>
                 </div>

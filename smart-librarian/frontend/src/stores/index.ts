@@ -131,7 +131,7 @@ export const useMetricsStore = create<MetricsState>()(
       responseTimes: [],
       averageResponseTime: 0,
       currentUsers: 1, // Start with 1 user (current user)
-      totalReaders: 1, // Start with 1 reader
+      totalReaders: 1, // Start with 1 reader (current user)
       lastResponseTime: null,
       
       initializeSession: () => {

@@ -39,6 +39,7 @@ export const useSystemInfo = () => {
 export const useSendMessage = () => {
   const { addMessage, setLoading, setError } = useChatStore();
   const addResponseTime = useMetricsStore((state) => state.addResponseTime);
+  const incrementReaders = useMetricsStore((state) => state.incrementReaders);
 
   return useMutation({
     mutationFn: async (request: ChatRequest) => {
@@ -70,6 +71,9 @@ export const useSendMessage = () => {
         timestamp: data.timestamp,
       });
 
+      // Count as an active reader when they successfully interact
+      incrementReaders();
+      
       setLoading(false);
       toast.success('Response received');
     },
@@ -202,17 +206,15 @@ export const useBookStatistics = () => {
 // Session management hook
 export const useSessionManagement = () => {
   const initializeSession = useMetricsStore((state) => state.initializeSession);
-  const incrementReaders = useMetricsStore((state) => state.incrementReaders);
   
-  // Initialize session on first load
+  // Initialize session on first load (don't auto-increment readers)
   React.useEffect(() => {
     initializeSession();
-    incrementReaders(); // Count this as a reader
-  }, [initializeSession, incrementReaders]);
+  }, [initializeSession]);
   
   return {
     initializeSession,
-    incrementReaders
+    incrementReaders: useMetricsStore((state) => state.incrementReaders)
   };
 };
 

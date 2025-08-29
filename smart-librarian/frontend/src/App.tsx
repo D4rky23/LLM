@@ -152,7 +152,7 @@ const AppContent: React.FC = () => {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-gray-400">Response Time</span>
-                  <span className="text-xs font-bold text-green-400">{responseTime || 0}ms</span>
+                  <span className="text-xs font-bold text-green-400">{responseTime > 0 ? `${responseTime}ms` : 'N/A'}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-gray-400">Session</span>
@@ -281,7 +281,7 @@ const AppContent: React.FC = () => {
                     <div className="h-full bg-gradient-to-r from-green-400 to-blue-400 rounded-full transition-all duration-1000" 
                          style={{width: `${Math.random() * 30 + 70}%`}} />
                   </div>
-                  <span className="text-gray-400">{responseTime || 150}ms</span>
+                  <span className="text-gray-400">{responseTime > 0 ? `${responseTime}ms` : 'N/A'}</span>
                 </div>
               </div>
               
