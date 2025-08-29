@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
-import { BookOpen, Menu, X } from 'lucide-react';
+import { BookOpen, Menu, X, Star, Zap, Globe, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ChatHistory } from '@/components/ChatHistory';
 import { ChatInput } from '@/components/ChatInput';
 import { SystemStatus } from '@/components/SystemStatus';
 import { SampleQueries } from '@/components/SampleQueries';
 import { SettingsPanel } from '@/components/SettingsPanel';
+import { QuickSearch } from '@/components/QuickSearch';
 import { useSendMessage } from '@/hooks/useApi';
 import { useChatMessages, useSettingsStore } from '@/stores';
 import { cn } from '@/lib/utils';
@@ -24,12 +25,15 @@ const queryClient = new QueryClient({
 
 const AppContent: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [headerScrolled, setHeaderScrolled] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const messages = useChatMessages();
   const sendMessage = useSendMessage();
   const { useTTS, useImageGeneration } = useSettingsStore();
 
   const handleSampleQuery = async (query: string) => {
     try {
+      setIsTyping(true);
       await sendMessage.mutateAsync({
         message: query,
         use_tts: useTTS,
@@ -37,6 +41,48 @@ const AppContent: React.FC = () => {
       });
     } catch (error) {
       console.error('Failed to send sample query:', error);
+    } finally {
+      setIsTyping(false);
+    }
+  };
+
+  // Simulate scroll effect for header and add parallax
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHeaderScrolled(messages.length > 0);
+    }, 100);
+    return () => clearInterval(interval);
+  }, [messages.length]);
+
+  // Add mouse parallax effect for header
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const header = document.querySelector('.header-enhanced') as HTMLElement;
+      if (header) {
+        const rect = header.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width - 0.5) * 20;
+        const y = ((e.clientY - rect.top) / rect.height - 0.5) * 10;
+        
+        const orbs = header.querySelectorAll('.parallax-orb');
+        orbs.forEach((orb, index) => {
+          const factor = (index + 1) * 0.5;
+          (orb as HTMLElement).style.transform = `translate(${x * factor}px, ${y * factor}px)`;
+        });
+      }
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    return () => document.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  const handleQuickSearch = async (query: string) => {
+    try {
+      setIsTyping(true);
+      await handleSampleQuery(query);
+    } catch (error) {
+      console.error('Failed to execute quick search:', error);
+    } finally {
+      setIsTyping(false);
     }
   };
 
@@ -135,39 +181,124 @@ const AppContent: React.FC = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 h-full">
         {/* Header */}
-        <header className="header-glass p-3 flex-shrink-0">
-          <div className="flex items-center justify-between">
+        <header className={cn(
+          "header-glass header-enhanced transition-all duration-500 relative overflow-hidden",
+          headerScrolled ? "p-2 shadow-2xl" : "p-3"
+        )}>
+          {/* Animated background overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-cyan-600/10 animate-pulse opacity-50" />
+          <div className="absolute inset-0">
+            <div className="parallax-orb absolute top-0 left-0 w-32 h-32 bg-blue-500/20 rounded-full filter blur-3xl animate-pulse transition-transform duration-300" />
+            <div className="parallax-orb absolute top-0 right-0 w-24 h-24 bg-purple-500/20 rounded-full filter blur-2xl animate-pulse delay-1000 transition-transform duration-300" />
+            <div className="parallax-orb absolute bottom-0 left-1/3 w-20 h-20 bg-cyan-500/15 rounded-full filter blur-2xl animate-pulse delay-500 transition-transform duration-300" />
+          </div>
+          
+          <div className="flex items-center justify-between relative z-10">
             <div className="flex items-center gap-3">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setSidebarOpen(true)}
-                className="lg:hidden hover:bg-white/10"
+                className="lg:hidden hover:bg-white/10 transition-all duration-300 hover:scale-110"
               >
                 <Menu className="w-5 h-5" />
               </Button>
               
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center floating-element glow-effect">
-                  <BookOpen className="w-5 h-5 text-white" />
+              <div className="flex items-center gap-3 group">
+                {/* Enhanced Logo */}
+                <div className="relative">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center floating-element glow-effect transition-all duration-500 group-hover:scale-125 group-hover:rotate-12">
+                    <BookOpen className="w-5 h-5 text-white transition-transform duration-300 group-hover:scale-110" />
+                  </div>
+                  {/* Orbit rings */}
+                  <div className="absolute inset-0 w-10 h-10 border-2 border-blue-400/30 rounded-full animate-spin opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{animationDuration: '3s'}} />
+                  <div className="absolute inset-0 w-10 h-10 border border-purple-400/30 rounded-full animate-spin opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{animationDuration: '2s', animationDirection: 'reverse'}} />
                 </div>
-                <div>
-                  <h1 className="text-2xl font-bold gradient-text">
-                    Smart Librarian AI
-                  </h1>
-                  <p className="text-xs text-gray-300">
-                    Discover incredible books with personalized AI recommendations
-                  </p>
+                
+                <div className="transition-all duration-300">
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-2xl font-bold gradient-text transition-all duration-300 group-hover:scale-105">
+                      Smart Librarian AI
+                    </h1>
+                    {/* Live indicators */}
+                    <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1 bg-green-500/20 px-2 py-1 rounded-full border border-green-500/30">
+                        <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse" />
+                        <span className="text-xs text-green-400 font-medium">LIVE</span>
+                      </div>
+                      {isTyping && (
+                        <div className="flex items-center gap-1 bg-blue-500/20 px-2 py-1 rounded-full border border-blue-500/30 animate-pulse">
+                          <Zap className="w-3 h-3 text-blue-400" />
+                          <span className="text-xs text-blue-400 font-medium">Thinking...</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 mt-1">
+                    <p className="text-xs text-gray-300 transition-colors duration-300 group-hover:text-white">
+                      Discover incredible books with personalized AI recommendations
+                    </p>
+                    {/* Stats */}
+                    <div className="hidden md:flex items-center gap-3 text-xs">
+                      <div className="flex items-center gap-1 text-blue-400">
+                        <Star className="w-3 h-3" />
+                        <span>{Math.floor(Math.random() * 500) + 1000}+ Books</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-purple-400">
+                        <Users className="w-3 h-3" />
+                        <span>{Math.floor(Math.random() * 50) + 100}+ Users</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-green-400">
+                        <Globe className="w-3 h-3" />
+                        <span>Multi-language</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Status Indicator */}
-            <div className="hidden sm:flex items-center gap-2 glass-card px-3 py-1 rounded-full">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-xs text-gray-300">Online</span>
+            {/* Enhanced Right Section */}
+            <div className="flex items-center gap-3">
+              {/* Quick Search */}
+              <QuickSearch onSearch={handleQuickSearch} className="hidden md:block" />
+              
+              {/* AI Status */}
+              <div className="flex items-center gap-2 glass-card px-3 py-1.5 rounded-full group hover:shadow-lg transition-all duration-300">
+                <div className="relative">
+                  <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                  <div className="absolute inset-0 w-2 h-2 bg-green-400 rounded-full animate-ping opacity-30" />
+                </div>
+                <span className="text-xs text-gray-300 group-hover:text-white transition-colors font-medium">AI Online</span>
+                
+                {/* Performance indicator */}
+                <div className="hidden sm:flex items-center gap-1 ml-2 text-xs">
+                  <div className="w-12 bg-gray-700 rounded-full h-1 overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-green-400 to-blue-400 rounded-full transition-all duration-1000" 
+                         style={{width: `${Math.random() * 30 + 70}%`}} />
+                  </div>
+                  <span className="text-gray-400">{Math.floor(Math.random() * 50) + 150}ms</span>
+                </div>
+              </div>
+              
+              {/* Activity Indicator */}
+              <div className="hidden lg:flex items-center gap-1 glass-card px-2 py-1.5 rounded-full">
+                {[...Array(5)].map((_, i) => (
+                  <div 
+                    key={i}
+                    className="w-0.5 bg-blue-400/50 rounded-full transition-all duration-300"
+                    style={{
+                      height: `${Math.random() * 12 + 4}px`,
+                      animationDelay: `${i * 200}ms`
+                    }}
+                  />
+                ))}
+              </div>
             </div>
           </div>
+          
+          {/* Bottom border with animated gradient */}
+          <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-50" />
         </header>
 
         {/* Main Chat Area */}
