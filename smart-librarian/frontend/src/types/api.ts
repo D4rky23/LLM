@@ -2,6 +2,8 @@ export interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
   timestamp?: string;
+  audioUrl?: string;
+  imageUrl?: string;
 }
 
 export interface ChatRequest {

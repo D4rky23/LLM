@@ -69,6 +69,8 @@ export const useSendMessage = () => {
         role: 'assistant',
         content: data.response,
         timestamp: data.timestamp,
+        audioUrl: data.audio_url,
+        imageUrl: data.image_url,
       });
 
       // Count as an active reader when they successfully interact

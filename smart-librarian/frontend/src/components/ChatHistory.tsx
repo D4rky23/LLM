@@ -159,6 +159,7 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({ bookStats, metrics }) 
   const messages = useChatMessages();
   const [typedText, setTypedText] = useState('');
   const [showFeatures, setShowFeatures] = useState(false);
+  const messagesEndRef = React.useRef<HTMLDivElement>(null);
   
   // Always call hooks - never conditionally
   const responseTimeFromStore = useResponseTime();
@@ -199,6 +200,11 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({ bookStats, metrics }) 
       return () => clearInterval(typingInterval);
     }
   }, [messages?.length]);
+
+  // Scroll to bottom when new messages are added
+  React.useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   if (messages.length === 0) {
     return (
@@ -361,8 +367,11 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({ bookStats, metrics }) 
           role={message.role}
           content={message.content}
           timestamp={message.timestamp}
+          audioUrl={message.audioUrl}
+          imageUrl={message.imageUrl}
         />
       ))}
+      <div ref={messagesEndRef} />
     </div>
   );
 };

@@ -3,7 +3,7 @@
 import sys
 from pathlib import Path
 from typing import List, Optional, Dict, Any
-from fastapi import FastAPI, HTTPException, UploadFile, File, BackgroundTasks
+from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -199,9 +199,7 @@ async def get_system_status():
 
 
 @app.post("/api/chat", response_model=ChatResponse)
-async def chat_with_ai(
-    request: ChatRequest, background_tasks: BackgroundTasks
-):
+async def chat_with_ai(request: ChatRequest):
     """Chat with Smart Librarian AI."""
     if not chatbot:
         raise HTTPException(status_code=500, detail="Chatbot not initialized")
@@ -214,47 +212,36 @@ async def chat_with_ai(
             response=ai_response, timestamp=datetime.now().isoformat()
         )
 
-        # Generate TTS if requested
+        # Generate TTS if requested (synchronously to include URL in response)
         if request.use_tts and is_tts_available()["any_available"]:
-            background_tasks.add_task(
-                generate_tts_background, ai_response, response
-            )
+            try:
+                audio_path = speak(ai_response)
+                if audio_path and audio_path.exists():
+                    response.audio_url = f"/static/{audio_path.name}"
+            except Exception as e:
+                print(f"TTS generation error: {e}")
 
-        # Generate image if requested
+        # Generate image if requested (synchronously to include URL in response)
         if request.use_image and is_image_generation_available():
-            background_tasks.add_task(
-                generate_image_background, ai_response, response
-            )
+            try:
+                if (
+                    "recommend" in ai_response.lower()
+                    or "book" in ai_response.lower()
+                ):
+                    # Extract book info from response (simplified)
+                    book_title = "Recommended Book"
+                    book_themes = ["literature", "fiction"]
+
+                    image_path = generate_cover(book_title, book_themes)
+                    if image_path and image_path.exists():
+                        response.image_url = f"/static/{image_path.name}"
+            except Exception as e:
+                print(f"Image generation error: {e}")
 
         return response
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Chat error: {str(e)}")
-
-
-async def generate_tts_background(text: str, response: ChatResponse):
-    """Background task to generate TTS."""
-    try:
-        audio_path = speak(text)
-        if audio_path and audio_path.exists():
-            response.audio_url = f"/static/{audio_path.name}"
-    except Exception as e:
-        print(f"TTS generation error: {e}")
-
-
-async def generate_image_background(text: str, response: ChatResponse):
-    """Background task to generate image."""
-    try:
-        if "recommend" in text.lower() or "book" in text.lower():
-            # Extract book info from response (simplified)
-            book_title = "Recommended Book"
-            book_themes = ["literature", "fiction"]
-
-            image_path = generate_cover(book_title, book_themes)
-            if image_path and image_path.exists():
-                response.image_url = f"/static/{image_path.name}"
-    except Exception as e:
-        print(f"Image generation error: {e}")
 
 
 @app.post("/api/transcribe", response_model=TranscriptionResponse)
