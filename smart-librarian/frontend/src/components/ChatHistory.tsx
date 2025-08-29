@@ -5,6 +5,16 @@ import { useChatMessages } from '@/stores';
 import { formatTimestamp } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 
+interface BookStatistics {
+  totalBooks: number;
+  bookList: any;
+  systemInfo: any;
+}
+
+interface ChatHistoryProps {
+  bookStats?: BookStatistics;
+}
+
 interface ChatMessageProps {
   role: 'user' | 'assistant';
   content: string;
@@ -138,7 +148,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   );
 };
 
-export const ChatHistory: React.FC = () => {
+export const ChatHistory: React.FC<ChatHistoryProps> = ({ bookStats }) => {
   const messages = useChatMessages();
   const [typedText, setTypedText] = useState('');
   const [showFeatures, setShowFeatures] = useState(false);
@@ -280,7 +290,7 @@ export const ChatHistory: React.FC = () => {
               <div className="grid grid-cols-3 gap-3 text-center">
                 <div className="group cursor-pointer">
                   <div className="text-lg font-bold gradient-text mb-1 group-hover:scale-110 transition-transform">
-                    {Math.floor(Math.random() * 5000) + 10000}+
+                    {bookStats?.totalBooks || '...'}
                   </div>
                   <div className="text-xs text-gray-400 group-hover:text-white transition-colors">Books</div>
                 </div>

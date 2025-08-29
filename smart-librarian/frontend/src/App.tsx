@@ -9,7 +9,7 @@ import { SystemStatus } from '@/components/SystemStatus';
 import { SampleQueries } from '@/components/SampleQueries';
 import { SettingsPanel } from '@/components/SettingsPanel';
 import { QuickSearch } from '@/components/QuickSearch';
-import { useSendMessage } from '@/hooks/useApi';
+import { useSendMessage, useBookStatistics } from '@/hooks/useApi';
 import { useChatMessages, useSettingsStore } from '@/stores';
 import { cn } from '@/lib/utils';
 
@@ -30,6 +30,7 @@ const AppContent: React.FC = () => {
   const messages = useChatMessages();
   const sendMessage = useSendMessage();
   const { useTTS, useImageGeneration } = useSettingsStore();
+  const { data: bookStats, isLoading: bookStatsLoading } = useBookStatistics();
 
   const handleSampleQuery = async (query: string) => {
     try {
@@ -138,8 +139,8 @@ const AppContent: React.FC = () => {
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs text-gray-400">Messages Today</span>
-                  <span className="text-xs font-bold text-blue-400">{Math.floor(Math.random() * 50) + 10}</span>
+                  <span className="text-xs text-gray-400">Books Available</span>
+                  <span className="text-xs font-bold text-blue-400">{bookStatsLoading ? '...' : bookStats?.totalBooks || 0}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-gray-400">Response Time</span>
@@ -241,7 +242,7 @@ const AppContent: React.FC = () => {
                     <div className="hidden md:flex items-center gap-3 text-xs">
                       <div className="flex items-center gap-1 text-blue-400">
                         <Star className="w-3 h-3" />
-                        <span>{Math.floor(Math.random() * 500) + 1000}+ Books</span>
+                        <span>{bookStatsLoading ? '...' : `${bookStats?.totalBooks || 0}+ Books`}</span>
                       </div>
                       <div className="flex items-center gap-1 text-purple-400">
                         <Users className="w-3 h-3" />
@@ -308,7 +309,7 @@ const AppContent: React.FC = () => {
 
             {/* Chat History */}
             <div className="flex-1 overflow-hidden min-h-0">
-              <ChatHistory />
+              <ChatHistory bookStats={bookStats} />
             </div>
 
             {/* Chat Input */}

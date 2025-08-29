@@ -160,3 +160,23 @@ export const useBookByTitle = (title: string, enabled = true) => {
     staleTime: 300000,
   });
 };
+
+// Statistics hooks
+export const useBookStatistics = () => {
+  return useQuery({
+    queryKey: ['book-statistics'],
+    queryFn: async () => {
+      const [systemInfo, allBooks] = await Promise.all([
+        apiClient.getSystemInfo(),
+        apiClient.getAllBooks()
+      ]);
+      return {
+        totalBooks: systemInfo.data.total_books,
+        bookList: allBooks.data.books,
+        systemInfo: systemInfo.data
+      };
+    },
+    staleTime: 60000, // Consider data stale after 1 minute
+    refetchInterval: 300000, // Refetch every 5 minutes
+  });
+};
