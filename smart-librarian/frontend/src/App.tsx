@@ -190,8 +190,8 @@ const AppContent: React.FC = () => {
       <div className="flex-1 flex flex-col min-w-0 h-full">
         {/* Header */}
         <header className={cn(
-          "header-glass header-enhanced transition-all duration-500 relative overflow-hidden",
-          headerScrolled ? "p-2 shadow-2xl" : "p-3"
+          "header-glass transition-all duration-300 relative z-50",
+          headerScrolled ? "p-2 shadow-lg" : "p-3"
         )}>
           {/* Animated background overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-cyan-600/10 animate-pulse opacity-50" />

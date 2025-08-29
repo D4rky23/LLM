@@ -61,7 +61,7 @@ export const QuickSearch: React.FC<QuickSearchProps> = ({ onSearch, className })
   };
 
   return (
-    <div ref={containerRef} className={cn("relative", className)}>
+    <div ref={containerRef} className={cn("relative z-50", className)}>
       {/* Search Input */}
       <div 
         className={cn(
@@ -116,7 +116,7 @@ export const QuickSearch: React.FC<QuickSearchProps> = ({ onSearch, className })
 
       {/* Search Dropdown */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-gray-900/95 backdrop-filter backdrop-blur-xl border border-white/20 rounded-xl shadow-2xl z-50 overflow-hidden slide-up">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-gray-900/95 backdrop-filter backdrop-blur-xl border border-white/20 rounded-xl shadow-2xl z-[9999] overflow-hidden slide-up">
           {query ? (
             /* Search Results */
             <div className="p-4">
