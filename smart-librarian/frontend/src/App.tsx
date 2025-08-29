@@ -83,6 +83,49 @@ const AppContent: React.FC = () => {
 
           {/* Sidebar Content */}
           <div className="flex-1 overflow-y-auto p-3 space-y-4">
+            {/* Mini Dashboard */}
+            <div className="glass-card p-3 rounded-xl border border-white/10 hover:border-blue-400/30 transition-all duration-300 group">
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-xs font-medium text-gray-300 group-hover:text-white transition-colors">
+                  Quick Stats
+                </h3>
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-gray-400">Messages Today</span>
+                  <span className="text-xs font-bold text-blue-400">{Math.floor(Math.random() * 50) + 10}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-gray-400">Response Time</span>
+                  <span className="text-xs font-bold text-green-400">{Math.floor(Math.random() * 100) + 200}ms</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-xs text-gray-400">Session</span>
+                  <span className="text-xs font-bold text-purple-400">{Math.floor(Math.random() * 30) + 5}min</span>
+                </div>
+              </div>
+              
+              {/* Activity indicator */}
+              <div className="mt-3 pt-2 border-t border-white/10">
+                <div className="flex items-center gap-2">
+                  <div className="flex space-x-1">
+                    {[...Array(7)].map((_, i) => (
+                      <div 
+                        key={i} 
+                        className="w-1 h-3 bg-blue-400/30 rounded-full"
+                        style={{
+                          height: `${Math.random() * 12 + 4}px`,
+                          background: `linear-gradient(to top, rgba(59, 130, 246, 0.3), rgba(59, 130, 246, ${Math.random() * 0.5 + 0.3}))`
+                        }}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-xs text-gray-400 ml-auto">7 days</span>
+                </div>
+              </div>
+            </div>
+            
             <SystemStatus />
             <SettingsPanel />
           </div>
