@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { User, Bot, Volume2, Image as ImageIcon, Clock, Sparkles, BookOpen, Zap, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useChatMessages } from '@/stores';
+import { useChatMessages, useResponseTime, useTotalReaders } from '@/stores';
 import { formatTimestamp } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 
@@ -11,8 +11,15 @@ interface BookStatistics {
   systemInfo: any;
 }
 
+interface RealMetrics {
+  sessionTime: string;
+  responseTime: number;
+  totalReaders: number;
+}
+
 interface ChatHistoryProps {
   bookStats?: BookStatistics;
+  metrics?: RealMetrics;
 }
 
 interface ChatMessageProps {
@@ -148,10 +155,14 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   );
 };
 
-export const ChatHistory: React.FC<ChatHistoryProps> = ({ bookStats }) => {
+export const ChatHistory: React.FC<ChatHistoryProps> = ({ bookStats, metrics }) => {
   const messages = useChatMessages();
   const [typedText, setTypedText] = useState('');
   const [showFeatures, setShowFeatures] = useState(false);
+  
+  // Use passed metrics or fallback to store
+  const responseTime = metrics?.responseTime || useResponseTime();
+  const totalReaders = metrics?.totalReaders || useTotalReaders();
   
   const welcomeTexts = [
     "Welcome to Smart Librarian AI!",
@@ -296,13 +307,13 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({ bookStats }) => {
                 </div>
                 <div className="group cursor-pointer">
                   <div className="text-lg font-bold text-green-400 mb-1 group-hover:scale-110 transition-transform">
-                    {Math.floor(Math.random() * 100) + 200}+
+                    {totalReaders}
                   </div>
                   <div className="text-xs text-gray-400 group-hover:text-white transition-colors">Readers</div>
                 </div>
                 <div className="group cursor-pointer">
                   <div className="text-lg font-bold text-purple-400 mb-1 group-hover:scale-110 transition-transform">
-                    {Math.floor(Math.random() * 50) + 150}ms
+                    {responseTime || 150}ms
                   </div>
                   <div className="text-xs text-gray-400 group-hover:text-white transition-colors">Response</div>
                 </div>

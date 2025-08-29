@@ -9,8 +9,8 @@ import { SystemStatus } from '@/components/SystemStatus';
 import { SampleQueries } from '@/components/SampleQueries';
 import { SettingsPanel } from '@/components/SettingsPanel';
 import { QuickSearch } from '@/components/QuickSearch';
-import { useSendMessage, useBookStatistics } from '@/hooks/useApi';
-import { useChatMessages, useSettingsStore } from '@/stores';
+import { useSendMessage, useBookStatistics, useSessionManagement, useSessionTimer } from '@/hooks/useApi';
+import { useChatMessages, useSettingsStore, useSessionTime, useResponseTime, useCurrentUsers, useTotalReaders } from '@/stores';
 import { cn } from '@/lib/utils';
 
 // Create a client
@@ -31,6 +31,14 @@ const AppContent: React.FC = () => {
   const sendMessage = useSendMessage();
   const { useTTS, useImageGeneration } = useSettingsStore();
   const { data: bookStats, isLoading: bookStatsLoading } = useBookStatistics();
+  
+  // Real metrics
+  useSessionManagement(); // Initialize session tracking
+  useSessionTimer(); // Real-time updates
+  const sessionTime = useSessionTime();
+  const responseTime = useResponseTime();
+  const currentUsers = useCurrentUsers();
+  const totalReaders = useTotalReaders();
 
   const handleSampleQuery = async (query: string) => {
     try {
@@ -144,11 +152,11 @@ const AppContent: React.FC = () => {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-gray-400">Response Time</span>
-                  <span className="text-xs font-bold text-green-400">{Math.floor(Math.random() * 100) + 200}ms</span>
+                  <span className="text-xs font-bold text-green-400">{responseTime || 0}ms</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-gray-400">Session</span>
-                  <span className="text-xs font-bold text-purple-400">{Math.floor(Math.random() * 30) + 5}min</span>
+                  <span className="text-xs font-bold text-purple-400">{sessionTime}</span>
                 </div>
               </div>
               
@@ -246,7 +254,7 @@ const AppContent: React.FC = () => {
                       </div>
                       <div className="flex items-center gap-1 text-purple-400">
                         <Users className="w-3 h-3" />
-                        <span>{Math.floor(Math.random() * 50) + 100}+ Users</span>
+                        <span>{currentUsers} User{currentUsers !== 1 ? 's' : ''}</span>
                       </div>
                       <div className="flex items-center gap-1 text-green-400">
                         <Globe className="w-3 h-3" />
@@ -273,7 +281,7 @@ const AppContent: React.FC = () => {
                     <div className="h-full bg-gradient-to-r from-green-400 to-blue-400 rounded-full transition-all duration-1000" 
                          style={{width: `${Math.random() * 30 + 70}%`}} />
                   </div>
-                  <span className="text-gray-400">{Math.floor(Math.random() * 50) + 150}ms</span>
+                  <span className="text-gray-400">{responseTime || 150}ms</span>
                 </div>
               </div>
               
@@ -309,7 +317,14 @@ const AppContent: React.FC = () => {
 
             {/* Chat History */}
             <div className="flex-1 overflow-hidden min-h-0">
-              <ChatHistory bookStats={bookStats} />
+              <ChatHistory 
+                bookStats={bookStats} 
+                metrics={{
+                  sessionTime,
+                  responseTime,
+                  totalReaders
+                }}
+              />
             </div>
 
             {/* Chat Input */}

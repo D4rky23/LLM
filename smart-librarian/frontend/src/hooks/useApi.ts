@@ -1,6 +1,7 @@
+import React from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { apiClient } from '@/lib/api';
-import { useChatStore, useSystemStore } from '@/stores';
+import { useChatStore, useSystemStore, useMetricsStore } from '@/stores';
 import type { ChatRequest } from '@/types/api';
 import toast from 'react-hot-toast';
 
@@ -37,6 +38,7 @@ export const useSystemInfo = () => {
 // Chat hooks
 export const useSendMessage = () => {
   const { addMessage, setLoading, setError } = useChatStore();
+  const addResponseTime = useMetricsStore((state) => state.addResponseTime);
 
   return useMutation({
     mutationFn: async (request: ChatRequest) => {
@@ -50,7 +52,14 @@ export const useSendMessage = () => {
         timestamp: new Date().toISOString(),
       });
 
+      const startTime = Date.now();
       const response = await apiClient.sendMessage(request);
+      const endTime = Date.now();
+      
+      // Track response time
+      const responseTime = endTime - startTime;
+      addResponseTime(responseTime);
+      
       return response.data;
     },
     onSuccess: (data) => {
@@ -121,6 +130,8 @@ export const useTranscribeMicrophone = () => {
 
 // Search hooks
 export const useSearchBooks = () => {
+  const addResponseTime = useMetricsStore((state) => state.addResponseTime);
+  
   return useMutation({
     mutationFn: async ({
       query,
@@ -129,7 +140,14 @@ export const useSearchBooks = () => {
       query: string;
       topK?: number;
     }) => {
+      const startTime = Date.now();
       const response = await apiClient.searchBooks(query, topK);
+      const endTime = Date.now();
+      
+      // Track response time
+      const responseTime = endTime - startTime;
+      addResponseTime(responseTime);
+      
       return response.data;
     },
     onError: (error: any) => {
@@ -179,4 +197,35 @@ export const useBookStatistics = () => {
     staleTime: 60000, // Consider data stale after 1 minute
     refetchInterval: 300000, // Refetch every 5 minutes
   });
+};
+
+// Session management hook
+export const useSessionManagement = () => {
+  const initializeSession = useMetricsStore((state) => state.initializeSession);
+  const incrementReaders = useMetricsStore((state) => state.incrementReaders);
+  
+  // Initialize session on first load
+  React.useEffect(() => {
+    initializeSession();
+    incrementReaders(); // Count this as a reader
+  }, [initializeSession, incrementReaders]);
+  
+  return {
+    initializeSession,
+    incrementReaders
+  };
+};
+
+// Timer hook for real-time session updates
+export const useSessionTimer = () => {
+  const [, forceUpdate] = React.useReducer((x) => x + 1, 0);
+  
+  React.useEffect(() => {
+    // Update session time every second
+    const interval = setInterval(() => {
+      forceUpdate();
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, []);
 };
