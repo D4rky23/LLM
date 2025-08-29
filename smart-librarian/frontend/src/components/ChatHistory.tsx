@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { User, Bot, Volume2, Image as ImageIcon, Clock, Sparkles, BookOpen, Zap, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useChatMessages, useResponseTime, useTotalReaders } from '@/stores';
@@ -160,9 +160,13 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({ bookStats, metrics }) 
   const [typedText, setTypedText] = useState('');
   const [showFeatures, setShowFeatures] = useState(false);
   
+  // Always call hooks - never conditionally
+  const responseTimeFromStore = useResponseTime();
+  const totalReadersFromStore = useTotalReaders();
+  
   // Use passed metrics or fallback to store
-  const responseTime = metrics?.responseTime || useResponseTime();
-  const totalReaders = metrics?.totalReaders || useTotalReaders();
+  const responseTime = metrics?.responseTime ?? responseTimeFromStore;
+  const totalReaders = metrics?.totalReaders ?? totalReadersFromStore;
   
   const welcomeTexts = [
     "Welcome to Smart Librarian AI!",
@@ -177,8 +181,8 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({ bookStats, metrics }) 
     { icon: Sparkles, text: "AI-Generated Covers", color: "text-purple-400" }
   ];
 
-  useEffect(() => {
-    if (messages.length === 0) {
+  React.useEffect(() => {
+    if (messages && messages.length === 0) {
       const fullText = welcomeTexts.join(' ');
       let currentIndex = 0;
       
@@ -194,7 +198,7 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({ bookStats, metrics }) 
 
       return () => clearInterval(typingInterval);
     }
-  }, [messages.length]);
+  }, [messages?.length]);
 
   if (messages.length === 0) {
     return (
