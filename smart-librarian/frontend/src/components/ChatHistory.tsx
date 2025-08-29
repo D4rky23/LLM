@@ -201,14 +201,19 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({ bookStats, metrics }) 
     }
   }, [messages?.length]);
 
-  // Scroll to bottom when new messages are added
+  // Scroll to bottom when new messages are added (with small delay for smooth experience)
   React.useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    if (messages.length > 0) {
+      const timer = setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [messages.length]);
 
   if (messages.length === 0) {
     return (
-      <div className="flex-1 flex items-start justify-center p-3 relative overflow-hidden overflow-y-auto">
+      <div className="h-full flex items-start justify-center p-3 relative overflow-y-auto">
         {/* Animated background particles */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {[...Array(20)].map((_, i) => (
@@ -360,7 +365,7 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({ bookStats, metrics }) 
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-3 space-y-3">
+    <div className="h-full overflow-y-auto p-3 space-y-3">
       {messages.map((message, index) => (
         <ChatMessage
           key={index}
@@ -372,6 +377,8 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({ bookStats, metrics }) 
         />
       ))}
       <div ref={messagesEndRef} />
+      {/* Add some bottom padding to ensure last message is visible */}
+      <div className="h-4" />
     </div>
   );
 };

@@ -306,8 +306,8 @@ const AppContent: React.FC = () => {
         </header>
 
         {/* Main Chat Area */}
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full h-full">
+        <div className="flex-1 flex flex-col min-h-0">
+          <div className="flex-1 flex flex-col max-w-4xl mx-auto w-full min-h-0">
             {/* Sample Queries - Show only when no messages */}
             {messages.length === 0 && (
               <div className="p-2 flex-shrink-0">
@@ -316,7 +316,7 @@ const AppContent: React.FC = () => {
             )}
 
             {/* Chat History */}
-            <div className="flex-1 overflow-hidden min-h-0">
+            <div className="flex-1 min-h-0 relative">
               <ChatHistory 
                 bookStats={bookStats} 
                 metrics={{
@@ -328,7 +328,7 @@ const AppContent: React.FC = () => {
             </div>
 
             {/* Chat Input */}
-            <div className="p-2 header-glass flex-shrink-0">
+            <div className="p-2 header-glass flex-shrink-0 border-t border-white/10">
               <ChatInput disabled={sendMessage.isPending} />
             </div>
           </div>

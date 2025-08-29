@@ -228,9 +228,10 @@ async def chat_with_ai(request: ChatRequest):
                     "recommend" in ai_response.lower()
                     or "book" in ai_response.lower()
                 ):
-                    # Extract book info from response (simplified)
-                    book_title = "Recommended Book"
-                    book_themes = ["literature", "fiction"]
+                    # Extract book info from response using intelligent parsing
+                    book_title, book_themes = extract_book_info_from_response(
+                        ai_response
+                    )
 
                     image_path = generate_cover(book_title, book_themes)
                     if image_path and image_path.exists():
@@ -242,6 +243,146 @@ async def chat_with_ai(request: ChatRequest):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Chat error: {str(e)}")
+
+
+def extract_book_info_from_response(
+    response_text: str,
+) -> tuple[str, list[str]]:
+    """Extract book title and themes from AI response."""
+    import re
+
+    response_lower = response_text.lower()
+
+    # Default values
+    book_title = "Recommended Book"
+    book_themes = ["literature", "fiction"]
+
+    # Try to extract book title from quotes or specific patterns
+    title_patterns = [
+        r'"([^"]+)"',  # Text in quotes
+        r"«([^»]+)»",  # Text in guillemets
+        r"'([^']+)'",  # Text in single quotes
+        r"\*([^*]+)\*",  # Text in asterisks
+        r"recommend.*?[:\-]\s*([A-Z][^,.!?]*)",  # Text after "recommend:"
+        r"titl[ue].*?[:\-]\s*([A-Z][^,.!?]*)",  # Text after "title:"
+        r"book.*?[:\-]\s*([A-Z][^,.!?]*)",  # Text after "book:"
+    ]
+
+    for pattern in title_patterns:
+        matches = re.findall(pattern, response_text, re.IGNORECASE)
+        if matches:
+            # Take the first meaningful match (longer than 3 characters)
+            potential_titles = [
+                m.strip() for m in matches if len(m.strip()) > 3
+            ]
+            if potential_titles:
+                book_title = potential_titles[0]
+                break
+
+    # Extract themes from keywords in the response
+    theme_keywords = {
+        "fantasy": [
+            "magic",
+            "dragon",
+            "wizard",
+            "fantasy",
+            "magical",
+            "enchant",
+            "spell",
+        ],
+        "science fiction": [
+            "space",
+            "sci-fi",
+            "future",
+            "robot",
+            "alien",
+            "technology",
+            "cyber",
+        ],
+        "romance": [
+            "love",
+            "romance",
+            "romantic",
+            "heart",
+            "passion",
+            "relationship",
+        ],
+        "mystery": [
+            "mystery",
+            "detective",
+            "crime",
+            "murder",
+            "investigation",
+            "puzzle",
+        ],
+        "horror": [
+            "horror",
+            "scary",
+            "fear",
+            "ghost",
+            "haunted",
+            "terror",
+            "nightmare",
+        ],
+        "thriller": [
+            "thriller",
+            "suspense",
+            "tension",
+            "action",
+            "chase",
+            "danger",
+        ],
+        "historical": [
+            "history",
+            "historical",
+            "past",
+            "ancient",
+            "medieval",
+            "war",
+        ],
+        "adventure": [
+            "adventure",
+            "journey",
+            "quest",
+            "exploration",
+            "travel",
+        ],
+        "drama": ["drama", "emotional", "family", "life", "society", "human"],
+        "comedy": ["funny", "humor", "comedy", "laugh", "amusing", "wit"],
+        "young adult": [
+            "teen",
+            "young",
+            "school",
+            "coming of age",
+            "adolescent",
+        ],
+        "classic": ["classic", "literature", "timeless", "masterpiece"],
+        "biography": ["biography", "life story", "memoir", "autobiography"],
+        "self-help": [
+            "self-help",
+            "personal development",
+            "improvement",
+            "guide",
+        ],
+        "philosophy": [
+            "philosophy",
+            "wisdom",
+            "thought",
+            "meaning",
+            "existence",
+        ],
+    }
+
+    detected_themes = []
+    for theme, keywords in theme_keywords.items():
+        if any(keyword in response_lower for keyword in keywords):
+            detected_themes.append(theme)
+
+    # If we found themes, use them, otherwise keep defaults
+    if detected_themes:
+        book_themes = detected_themes[:3]  # Limit to 3 themes
+
+    return book_title, book_themes
 
 
 @app.post("/api/transcribe", response_model=TranscriptionResponse)
